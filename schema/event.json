@@ -1,0 +1,14 @@
+{
+  "type": "object",
+  "title": "CAVAL Event",
+  "description": "Base event object for attribution, validation, and lineage.",
+  "properties": {
+    "event_id": { "type": "string" },
+    "timestamp": { "type": "string", "format": "date-time" },
+    "source_system": { "type": "string" },
+    "actor_type": { "type": "string", "enum": ["human", "model", "agent", "tool"] },
+    "action": { "type": "string" },
+    "payload": { "type": "object" }
+  },
+  "required": ["event_id", "timestamp", "actor_type", "action"]
+}
