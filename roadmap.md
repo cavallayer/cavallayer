@@ -49,7 +49,7 @@ This roadmap describes the planned development of the CAVAL Layer specification,
 ---
 
 ## v0.4 — Implementation Reference
-*Target: Q4 2026*
+*Target: Q1 2027*
 
 - Reference implementation of CAVAL Layer API
 - Sample integration patterns for major EHR platforms and ambient scribe vendors
@@ -59,7 +59,7 @@ This roadmap describes the planned development of the CAVAL Layer specification,
 ---
 
 ## v1.0 — Stable Release
-*Target: Q1 2027*
+*Target: Q2 2028*
 
 - First stable, production-ready release
 - HL7 Clinical Decision Support Work Group review complete
