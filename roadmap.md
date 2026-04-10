@@ -35,7 +35,7 @@ This roadmap describes the planned development of the CAVAL Layer specification,
 ---
 
 ## v0.3 — Jurisdiction Expansion
-*Target: Q3 2026*
+*Target: Q4 2026*
 
 - EU AI Act August 2026 compliance deadline alignment
 - Expanded regulatory mapping:
