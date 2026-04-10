@@ -28,5 +28,5 @@ Early publication for provenance and category definition.
 Active development.
 
 ## **License**
-
-MIT License.
+Creative Commons Attribution 4.0 International (CC BY 4.0).
+Copyright 2026 Sarah Curtright. CAVAL™ and CAVAL Layer™ are trademarks of Sarah Curtright.
