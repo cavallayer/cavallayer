@@ -55,3 +55,9 @@ not grant any rights to:
 Implementations of this specification are welcome and encouraged. 
 Trademark use requires written permission from Kairoc Systems Inc. 
 Contact: securtright@gmail.com
+
+## Systems Circle
+
+A high-signal environment for people who build high-stakes systems — governed by plumb line, not dashboard.
+
+[Learn more and apply](systems-circle/index.md)
