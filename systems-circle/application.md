@@ -66,4 +66,4 @@ There are no word limits. There is no right answer. There is no wrong format. An
 
 ---
 
-*Membership is by invitation. Continuation is at the discretion of the founding member. We curate for signal density, not size.*
+*Membership is by invitation. Continuation is at the discretion of the founding members. We curate for signal density, not size.*
