@@ -42,4 +42,33 @@ Bring what is yours to own.
 
 Say what you mean.
 Challenge what needs challenging.
-Do n
+Do not soften to manage someone's feelings.
+Do not perform agreement to keep the peace.
+
+---
+
+## Moral seriousness without performance
+
+This circle operates from a shared recognition that systems affect real people and carry real moral weight.
+That recognition does not require announcement.
+It shows in how you build, govern, and decide.
+Your plumb line is yours. It does not need to be explained or defended here.
+
+---
+
+## Silence is acceptable
+
+You do not have to speak in every block.
+Listening well is contributing.
+Presence without performance is welcome.
+
+---
+
+## What happens in the circle stays in the circle
+
+What members share about their systems, their decisions, and their challenges is confidential.
+Do not reference member content outside the circle without explicit permission.
+
+---
+
+*Norms are enforced by the founding members. Membership continues at their discretion.*
