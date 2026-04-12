@@ -20,7 +20,7 @@ Members of Systems Circle:
 - Carry responsibility without theatrics
 - Value moral grounding without performance
 - Prefer directness over politics
-- Operate from a Judeo-Christian moral framework or are in serious dialogue with one
+- Operate from an Abrahamic moral framework — including those who cannot name it publicly.
 
 ---
 
