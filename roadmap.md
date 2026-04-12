@@ -1,6 +1,8 @@
 # CAVAL Layer Roadmap
 
-This roadmap describes the planned development of the CAVAL Layer specification, schema, and governance infrastructure. Versioning follows semantic versioning (MAJOR.MINOR.PATCH).
+This roadmap describes the planned development of the CAVAL Layer 
+specification, schema, and governance infrastructure. Versioning 
+follows semantic versioning (MAJOR.MINOR.PATCH).
 
 ---
 
@@ -19,7 +21,7 @@ This roadmap describes the planned development of the CAVAL Layer specification,
 ---
 
 ## v0.2 — Schema Formalization
-*Target: Q3 2026*
+*Near-term*
 
 - JSON/YAML schemas for:
   - Attribution events
@@ -35,7 +37,7 @@ This roadmap describes the planned development of the CAVAL Layer specification,
 ---
 
 ## v0.3 — Jurisdiction Expansion
-*Target: Q4 2026*
+*Mid-term*
 
 - EU AI Act August 2026 compliance deadline alignment
 - Expanded regulatory mapping:
@@ -49,17 +51,18 @@ This roadmap describes the planned development of the CAVAL Layer specification,
 ---
 
 ## v0.4 — Implementation Reference
-*Target: Q1 2027*
+*Mid-term*
 
 - Reference implementation of CAVAL Layer API
-- Sample integration patterns for major EHR platforms and ambient scribe vendors
+- Sample integration patterns for major EHR platforms 
+  and ambient scribe vendors
 - Certified CAAS-compatible governance store specification
 - Level 3 Network Conformant certification framework draft
 
 ---
 
 ## v1.0 — Stable Release
-*Target: Q2 2028*
+*Following HL7 community review*
 
 - First stable, production-ready release
 - HL7 Clinical Decision Support Work Group review complete
@@ -72,18 +75,25 @@ This roadmap describes the planned development of the CAVAL Layer specification,
 
 ## Guiding Principles
 
-- **Open schema, always.** The specification remains CC BY 4.0. Certification programs and hosted infrastructure are separate commercial offerings.
-- **Jurisdiction-configurable.** A single attribution event satisfies requirements across all supported regulatory frameworks.
-- **Human decision primacy.** The schema captures AI influence. It does not capture or imply that AI made the decision.
-- **Append-only and immutable.** Events are legally defensible records, not editable logs.
+- **Open schema, always.** The specification remains CC BY 4.0. 
+  Certification programs and hosted infrastructure are separate 
+  commercial offerings.
+- **Jurisdiction-configurable.** A single attribution event 
+  satisfies requirements across all supported regulatory frameworks.
+- **Human decision primacy.** The schema captures AI influence. 
+  It does not capture or imply that AI made the decision.
+- **Append-only and immutable.** Events are legally defensible 
+  records, not editable logs.
 
 ---
 
 ## Contributing
 
-To propose a field for promotion to core schema, open a GitHub issue with a completed field proposal.  
-To submit feedback on the specification, open a GitHub issue or email securtright@gmail.com.
+To propose a field for promotion to core schema, open a GitHub 
+issue with a completed field proposal.
+To submit feedback on the specification, open a GitHub issue 
+or email securtright@gmail.com.
 
-CAVAL™ and CAVAL Layer™ are trademarks of Sarah Curtright.  
-This specification is licensed under CC BY 4.0: https://creativecommons.org/licenses/by/4.0/legalcode
-
+CAVAL™ and CAVAL Layer™ are trademarks of Sarah Curtright.
+This specification is licensed under CC BY 4.0: 
+https://creativecommons.org/licenses/by/4.0/legalcode
