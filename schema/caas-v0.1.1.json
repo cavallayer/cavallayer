@@ -1,14 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/securtright/cavallayer/schema/caas-v0.1.1.json",
+  "$id": "https://github.com/cavallayer/cavallayer/schema/caas-v0.1.1.json",
   "title": "Clinical AI Attribution Schema (CAAS) v0.1.1",
-  "description": "Vendor-agnostic, jurisdiction-configurable schema for clinical AI attribution events. "description": "Vendor-agnostic, jurisdiction-configurable schema 
-for clinical AI attribution events. This schema defines the 
-conceptual attribution event structure. Production implementation 
-requires governance infrastructure, validation engines, and 
-conformance tooling available through Kairoc Systems. Copyright 
-2026 Sarah Curtright. CAVAL™ and CAVAL Layer™ are trademarks of 
-Sarah Curtright. Licensed under CC BY 4.0: https://creativecommons.org/licenses/by/4.0/legalcode", Copyright 2026 Sarah Curtright. CAVAL™ and CAVAL Layer™ are trademarks of Sarah Curtright. Licensed under CC BY 4.0: https://creativecommons.org/licenses/by/4.0/legalcode",
+  "description": "Vendor-agnostic, jurisdiction-configurable schema for clinical AI attribution events. This schema defines the conceptual attribution event structure. Production implementation requires governance infrastructure, validation engines, and conformance tooling available through Kairoc Systems. Copyright 2026 Sarah Curtright. CAVAL™ and CAVAL Layer™ are trademarks of Sarah Curtright. Licensed under CC BY 4.0: https://creativecommons.org/licenses/by/4.0/legalcode",
   "type": "object",
   "required": [
     "caae_version",
