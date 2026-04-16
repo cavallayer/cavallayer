@@ -4,6 +4,14 @@ Public schema and governance specification for the **CAVAL Layer** — a cloud�
 
 This repository publishes the foundational structures, schemas, and conceptual architecture that define how the CAVAL Layer evaluates, routes, and governs AI‑assisted activity across clinical and operational systems.
 
+
+## Overview
+
+📖 [Download the CAVAL Overview Deck (PDF)](./CAVAL-Overview.pdf)
+
+A visual introduction to the problem CAVAL solves, how the standard works, the CAAS v0.1.1 schema structure and clinical use cases.
+
+
 ## **Purpose**
 
 CAVAL Layer establishes:
