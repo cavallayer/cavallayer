@@ -1,0 +1,634 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/cavallayer/cavallayer/schema/caas-v0.1.2.json",
+  "title": "Clinical AI Attribution Schema (CAAS) v0.1.2",
+  "description": "Vendor-agnostic, jurisdiction-configurable schema for clinical AI attribution events. This schema defines the conceptual attribution event structure. Production implementation requires governance infrastructure, validation engines, and conformance tooling available through Kairoc Systems. Copyright 2026 Sarah Curtright. CAVAL™ and CAVAL Layer™ are trademarks of Sarah Curtright. Licensed under CC BY 4.0: https://creativecommons.org/licenses/by/4.0/legalcode",
+  "type": "object",
+  "required": [
+    "caae_version",
+    "event",
+    "decision_context",
+    "tool_activity_log",
+    "judgment_capture",
+    "provenance_chain",
+    "governance_metadata"
+  ],
+  "additionalProperties": false,
+  "properties": {
+
+    "caae_version": {
+      "type": "string",
+      "description": "Schema version. Must be '0.1.2' for this release.",
+      "const": "0.1.2"
+    },
+
+    "event": {
+      "type": "object",
+      "description": "Identifies the attribution event itself. All fields required.",
+      "required": [
+        "event_id",
+        "event_timestamp",
+        "caae_version",
+        "parent_event_id",
+        "emitting_system",
+        "emitting_system_version"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "event_id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "Globally unique UUID v4 identifier for this event."
+        },
+        "event_timestamp": {
+          "type": "string",
+          "format": "date-time",
+          "description": "ISO 8601 datetime with timezone — when the event was generated."
+        },
+        "caae_version": {
+          "type": "string",
+          "description": "Schema version at time of event generation.",
+          "const": "0.1.2"
+        },
+        "parent_event_id": {
+          "type": ["string", "null"],
+          "format": "uuid",
+          "description": "UUID of prior event if this is a supplement or correction. Null for original events."
+        },
+        "emitting_system": {
+          "type": "string",
+          "description": "Identifier of the system that generated this event."
+        },
+        "emitting_system_version": {
+          "type": "string",
+          "description": "Version of the emitting system."
+        }
+      }
+    },
+
+    "decision_context": {
+      "type": "object",
+      "description": "Describes the clinical decision point at which AI was active.",
+      "required": [
+        "decision_type",
+        "decision_timestamp",
+        "patient_id_hash",
+        "clinician_id_hash",
+        "clinician_role",
+        "facility_id"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "decision_type": {
+          "type": "string",
+          "enum": ["order", "diagnosis", "documentation", "treatment_plan", "triage", "referral", "other"],
+          "description": "Type of clinical decision at this point."
+        },
+        "decision_type_free_text": {
+          "type": ["string", "null"],
+          "description": "Required when decision_type is 'other'. Documents the actual decision type."
+        },
+        "decision_timestamp": {
+          "type": "string",
+          "format": "date-time",
+          "description": "ISO 8601 datetime with timezone — when the clinical decision occurred."
+        },
+        "encounter_id": {
+          "type": ["string", "null"],
+          "description": "FHIR R4 Encounter.id if available. Used to link multiple attribution events within the same clinical encounter."
+        },
+        "patient_id_hash": {
+          "type": "string",
+          "description": "SHA-256 salted hash of patient identifier. Never store raw patient identifiers."
+        },
+        "clinician_id_hash": {
+          "type": "string",
+          "description": "SHA-256 salted hash of clinician identifier. Never store raw clinician identifiers."
+        },
+        "clinician_role": {
+          "type": "string",
+          "enum": ["physician", "np", "pa", "rn", "pharmacist", "other"],
+          "description": "Role of the clinician making the decision."
+        },
+        "facility_id": {
+          "type": "string",
+          "description": "Identifier of the health system or facility."
+        },
+        "workflow_step": {
+          "type": ["string", "null"],
+          "description": "EHR workflow context e.g. 'order_entry', 'chart_review'."
+        },
+        "fhir_resource_reference": {
+          "type": ["string", "null"],
+          "description": "FHIR R4 resource type and ID of the decision object e.g. 'MedicationRequest/mr-001'."
+        }
+      },
+      "if": {
+        "properties": { "decision_type": { "const": "other" } }
+      },
+      "then": {
+        "required": ["decision_type_free_text"],
+        "properties": {
+          "decision_type_free_text": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+
+    "tool_activity_log": {
+      "type": "array",
+      "description": "Array of AI tool activity records — one entry per tool active at the decision point. At least one entry required.",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "tool_id",
+          "tool_name",
+          "tool_version",
+          "tool_vendor",
+          "tool_category",
+          "activation_timestamp",
+          "activation_trigger",
+          "output_surfaced"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "tool_id": {
+            "type": "string",
+            "description": "Vendor-assigned unique identifier for the AI tool."
+          },
+          "tool_name": {
+            "type": "string",
+            "description": "Human-readable name of the tool."
+          },
+          "tool_version": {
+            "type": "string",
+            "description": "Version of the model or tool at time of decision."
+          },
+          "tool_vendor": {
+            "type": "string",
+            "description": "Name of the AI vendor."
+          },
+          "tool_category": {
+            "type": "string",
+            "enum": ["ambient_scribe", "diagnostic", "reference", "ehr_embedded", "predictive", "other"],
+            "description": "Category of AI tool."
+          },
+          "activation_timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "description": "ISO 8601 datetime — when the tool became active in this encounter."
+          },
+          "activation_trigger": {
+            "type": "string",
+            "enum": ["automatic", "clinician_invoked", "protocol_triggered", "ambient"],
+            "description": "Why the tool became active. Required. Distinguishes passive background tools from actively invoked tools."
+          },
+          "output_surfaced": {
+            "type": "boolean",
+            "description": "True if the tool produced output visible to the clinician at the decision point."
+          },
+          "output_attended": {
+            "type": ["boolean", "null"],
+            "description": "True if the clinician attended to the output at the moment of decision. Null when not capturable."
+          },
+          "output_type": {
+            "type": ["string", "null"],
+            "enum": ["recommendation", "alert", "summary", "documentation_draft", "risk_score", "other", null],
+            "description": "Type of output produced by the tool."
+          },
+          "output_summary_hash": {
+            "type": ["string", "null"],
+            "description": "SHA-256 of the canonical UTF-8 JSON representation of the tool output object."
+          },
+          "confidence_score": {
+            "type": ["number", "null"],
+            "minimum": 0.0,
+            "maximum": 1.0,
+            "description": "Tool-reported confidence score if available (0.0–1.0)."
+          },
+          "model_metadata": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "training_data_version": {
+                "type": ["string", "null"],
+                "description": "Version of training data used by the model."
+              },
+              "last_validation_date": {
+                "type": ["string", "null"],
+                "format": "date",
+                "description": "ISO 8601 date of last model validation."
+              },
+              "model_drift_detected": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "detected": {
+                    "type": ["boolean", "null"],
+                    "description": "True if vendor has flagged model drift since last validation."
+                  },
+                  "detected_date": {
+                    "type": ["string", "null"],
+                    "format": "date",
+                    "description": "ISO 8601 date when drift was detected."
+                  },
+                  "drift_type": {
+                    "type": ["string", "null"],
+                    "description": "Type of drift detected e.g. 'data_drift', 'concept_drift', 'performance_degradation'."
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "judgment_capture": {
+      "type": "array",
+      "description": "Array of clinician judgment records — one entry per tool in tool_activity_log that surfaced output.",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "tool_id",
+          "capture_method",
+          "judgment",
+          "modification_flag"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "tool_id": {
+            "type": "string",
+            "description": "Foreign key — must match a tool_id in tool_activity_log."
+          },
+          "capture_method": {
+            "type": "string",
+            "enum": ["ui_interaction", "workflow_signal", "structured_field", "inferred", "not_captured"],
+            "description": "How the judgment signal was captured."
+          },
+          "inference_pattern": {
+            "type": ["string", "null"],
+            "enum": ["order_completion", "chart_sign_off", "protocol_acknowledgment", null],
+            "description": "Required when capture_method is 'inferred'. Named inference pattern used."
+          },
+          "capture_timestamp": {
+            "type": ["string", "null"],
+            "format": "date-time",
+            "description": "ISO 8601 datetime when the judgment signal was captured."
+          },
+          "judgment": {
+            "type": "string",
+            "enum": ["accepted", "rejected", "modified", "ignored", "not_applicable", "deferred", "not_captured"],
+            "description": "Clinician judgment on the AI output."
+          },
+          "modification_flag": {
+            "type": "boolean",
+            "description": "True if the clinician modified AI output before acting on it."
+          },
+          "override_reason_code": {
+            "type": ["string", "null"],
+            "description": "Structured reason code when judgment is 'rejected'. Follow implementing organization controlled vocabulary."
+          },
+          "override_reason_free_text": {
+            "type": ["string", "null"],
+            "description": "Optional free text reason. Must be de-identified before storage."
+          },
+          "time_to_judgment_seconds": {
+            "type": ["number", "null"],
+            "minimum": 0,
+            "description": "Elapsed seconds between output surfacing and judgment capture."
+          },
+          "deferred_until": {
+            "type": ["string", "null"],
+            "format": "date-time",
+            "description": "Required when judgment is 'deferred'. Expected resolution datetime."
+          },
+          "deferred_reason_code": {
+            "type": ["string", "null"],
+            "description": "Structured reason code for deferral."
+          },
+          "prior_judgment_summary": {
+            "type": ["object", "null"],
+            "additionalProperties": false,
+            "description": "Prior judgment history for this tool and patient pair. Enables alert fatigue detection.",
+            "properties": {
+              "prior_judgment_count": {
+                "type": ["number", "null"],
+                "minimum": 0
+              },
+              "accepted": { "type": ["number", "null"], "minimum": 0 },
+              "rejected": { "type": ["number", "null"], "minimum": 0 },
+              "ignored":  { "type": ["number", "null"], "minimum": 0 }
+            }
+          }
+        },
+        "if": {
+          "properties": { "capture_method": { "const": "inferred" } }
+        },
+        "then": {
+          "required": ["inference_pattern"],
+          "properties": {
+            "inference_pattern": { "type": "string" }
+          }
+        }
+      }
+    },
+
+    "provenance_chain": {
+      "type": "object",
+      "description": "Documents the lineage of data that informed the AI output.",
+      "required": ["input_data_sources", "prompt_captured"],
+      "additionalProperties": false,
+      "properties": {
+        "input_data_sources": {
+          "type": "array",
+          "description": "Array of data sources that informed the AI output.",
+          "items": {
+            "type": "object",
+            "required": ["source_type"],
+            "additionalProperties": false,
+            "properties": {
+              "source_type": {
+                "type": "string",
+                "enum": ["ehr_structured", "ehr_unstructured", "claims", "device", "imaging", "genomic", "other"],
+                "description": "Type of data source."
+              },
+              "fhir_resource_types": {
+                "type": "array",
+                "items": { "type": "string" },
+                "description": "Array of FHIR R4 resource types accessed e.g. ['MedicationRequest', 'AllergyIntolerance']."
+              },
+              "data_timestamp_range": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "earliest": { "type": ["string", "null"], "format": "date-time" },
+                  "latest":   { "type": ["string", "null"], "format": "date-time" }
+                }
+              }
+            }
+          }
+        },
+        "prompt_captured": {
+          "type": "boolean",
+          "description": "True if the prompt or query sent to the AI model was captured."
+        },
+        "prompt_hash": {
+          "type": ["string", "null"],
+          "description": "SHA-256 hash of the prompt if captured. Never store raw prompts — PHI risk."
+        },
+        "context_window_hash": {
+          "type": ["string", "null"],
+          "description": "SHA-256 hash of the full context provided to the model."
+        },
+        "retrieval_sources": {
+          "type": "array",
+          "items": { "type": ["string", "null"] },
+          "description": "Array of knowledge base or retrieval sources used e.g. ['clinical-guidelines-db-v2026-Q1']."
+        }
+      }
+    },
+
+    "governance_metadata": {
+      "type": "object",
+      "description": "Controls jurisdiction-specific rendering and retention.",
+      "required": [
+        "jurisdictions",
+        "hipaa_covered_entity",
+        "baa_on_file",
+        "retention_policy_years",
+        "data_residency",
+        "immutability_verified",
+        "encryption_at_rest",
+        "encryption_in_transit"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "jurisdictions": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["US", "EU", "CA", "AU", "IN"]
+          },
+          "minItems": 1,
+          "description": "Array of applicable jurisdiction codes."
+        },
+        "hipaa_covered_entity": {
+          "type": "boolean",
+          "description": "True if the emitting organization is a HIPAA covered entity."
+        },
+        "baa_on_file": {
+          "type": "boolean",
+          "description": "True if a Business Associate Agreement is on file at time of event generation."
+        },
+        "retention_policy_years": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Minimum retention period in years per applicable jurisdiction. US minimum 6, EU minimum 10, AU minimum 7."
+        },
+        "data_residency": {
+          "type": "string",
+          "pattern": "^[A-Z]{2}$",
+          "description": "ISO 3166-1 alpha-2 country code where the event is stored e.g. 'US'."
+        },
+        "regulatory_mappings": {
+          "type": "array",
+          "description": "Jurisdiction-specific regulatory framework mappings.",
+          "items": {
+            "type": "object",
+            "required": ["jurisdiction", "framework", "compliance_status"],
+            "additionalProperties": false,
+            "properties": {
+              "jurisdiction": {
+                "type": "string",
+                "description": "Jurisdiction code e.g. 'US', 'EU'."
+              },
+              "framework": {
+                "type": "string",
+                "description": "Regulatory framework identifier e.g. 'CMS_AI_Playbook_v4', 'EU_AI_Act_Art14', 'ONC_21CC_CDS'."
+              },
+              "compliance_status": {
+                "type": "string",
+                "enum": ["compliant", "partial", "not_assessed"],
+                "description": "Current compliance status against this framework."
+              },
+              "last_assessed": {
+                "type": ["string", "null"],
+                "format": "date",
+                "description": "ISO 8601 date of last compliance assessment."
+              }
+            }
+          }
+        },
+        "immutability_verified": {
+          "type": "boolean",
+          "description": "True if the storage layer has confirmed append-only immutability. Set by storage layer, not emitting system."
+        },
+        "encryption_at_rest": {
+          "type": "boolean",
+          "description": "True if the event is encrypted at rest."
+        },
+        "encryption_in_transit": {
+          "type": "boolean",
+          "description": "True if the event is encrypted in transit."
+        }
+      }
+    },
+
+    "review_record": {
+      "type": "object",
+      "description": "Optional. Secondary human review record — supervisor sign-off, pharmacist co-sign, or compliance spot-check.",
+      "required": [
+        "reviewer_id_hash",
+        "reviewer_role",
+        "review_timestamp",
+        "review_outcome"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "reviewer_id_hash": {
+          "type": "string",
+          "description": "SHA-256 salted hash of reviewer identifier."
+        },
+        "reviewer_role": {
+          "type": "string",
+          "enum": ["supervising_physician", "pharmacist", "charge_nurse", "compliance_officer", "other"],
+          "description": "Role of the secondary reviewer."
+        },
+        "review_timestamp": {
+          "type": "string",
+          "format": "date-time",
+          "description": "ISO 8601 datetime of the review."
+        },
+        "review_outcome": {
+          "type": "string",
+          "enum": ["approved", "flagged", "escalated"],
+          "description": "Outcome of the secondary review."
+        },
+        "review_notes_hash": {
+          "type": ["string", "null"],
+          "description": "SHA-256 hash of reviewer notes if captured."
+        }
+      }
+    },
+
+    "promotion_conditions": {
+      "type": "object",
+      "description": "Optional. Records whether AI output crossed a threshold triggering conditional escalation. Required when activation_trigger is 'automatic' and confidence_score exceeds 0.8, or output_type is 'alert' or 'recommendation'.",
+      "required": [
+        "threshold_met",
+        "escalation_required",
+        "escalation_triggered"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "threshold_type": {
+          "type": ["string", "null"],
+          "description": "The type of threshold evaluated e.g. 'confidence_score', 'risk_score'."
+        },
+        "threshold_value": {
+          "type": ["number", "null"],
+          "description": "The threshold value that was evaluated."
+        },
+        "threshold_met": {
+          "type": "boolean",
+          "description": "True if the threshold was met or exceeded."
+        },
+        "escalation_required": {
+          "type": "boolean",
+          "description": "True if policy requires human escalation given the threshold result."
+        },
+        "escalation_triggered": {
+          "type": "boolean",
+          "description": "True if escalation was actually triggered."
+        },
+        "escalation_target": {
+          "type": ["string", "null"],
+          "description": "Role or system receiving the escalation e.g. 'charge_nurse', 'pharmacy_review_queue'."
+        }
+      }
+    },
+
+    "encounter_attribution_chain": {
+      "type": "array",
+      "description": "Optional. Array of additional attribution events within the same clinical encounter — one entry per actor who interacted with AI output at a distinct decision point. Captures multi-actor clinical decision environments without asserting causal relationships between actors. Each actor stream is documented independently. Implementers link events to the same encounter via encounter_id in decision_context. This field addresses clinical settings where AI output travels through multiple decision points — for example, an interpreting clinician, a consulting clinician, a care coordinator, or a patient — each of whom may act on AI-influenced information differently and under different standards of care.",
+      "items": {
+        "type": "object",
+        "required": [
+          "chain_event_id",
+          "actor_id_hash",
+          "actor_role",
+          "actor_credential_context",
+          "decision_timestamp",
+          "ai_tools_active",
+          "judgment_capture_summary"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "chain_event_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique UUID v4 for this chain event. Does not replace the parent event_id."
+          },
+          "actor_id_hash": {
+            "type": "string",
+            "description": "SHA-256 salted hash of this actor's identifier. Never store raw identifiers."
+          },
+          "actor_role": {
+            "type": "string",
+            "enum": ["physician", "np", "pa", "rn", "pharmacist", "care_coordinator", "patient", "other"],
+            "description": "Clinical or non-clinical role of this actor at their decision point."
+          },
+          "actor_credential_context": {
+            "type": ["string", "null"],
+            "description": "Contextual credential information relevant to standard of care at this decision point e.g. specialty, contractor vs employee status, scope limitations. Must be de-identified."
+          },
+          "decision_timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "description": "ISO 8601 datetime when this actor's decision point occurred."
+          },
+          "ai_tools_active": {
+            "type": "array",
+            "description": "Tool IDs from tool_activity_log that were active or whose output was present at this actor's decision point.",
+            "items": { "type": "string" }
+          },
+          "judgment_capture_summary": {
+            "type": "string",
+            "enum": ["accepted", "rejected", "modified", "ignored", "not_applicable", "deferred", "not_captured"],
+            "description": "Summary judgment signal for this actor at this decision point. Matches judgment vocabulary in judgment_capture."
+          },
+          "information_received": {
+            "type": ["string", "null"],
+            "description": "The form in which AI-influenced information reached this actor e.g. 'final_report', 'verbal_summary', 'app_notification', 'structured_alert'. Documents information pathway without asserting causation."
+          },
+          "notes_hash": {
+            "type": ["string", "null"],
+            "description": "SHA-256 hash of any notes captured at this actor's decision point. Never store raw notes — PHI risk."
+          }
+        }
+      }
+    },
+
+    "_extensions": {
+      "type": "object",
+      "description": "Optional. Freeform object for implementer-specific fields. Must not override or conflict with core schema fields.",
+      "properties": {
+        "implementer": {
+          "type": "string",
+          "description": "Organization implementing the extension."
+        },
+        "extension_version": {
+          "type": "string",
+          "description": "Version of the extension."
+        },
+        "fields": {
+          "type": "object",
+          "description": "Extension fields. Structure defined by implementer."
+        }
+      }
+    }
+
+  }
+}
