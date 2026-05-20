@@ -5,307 +5,293 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CAVAL™ — NHS Clinical AI Attribution Walkthrough</title>
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#F4F6F9;color:#1A1A1A;min-height:100vh;padding:2rem 1rem}
-.container{max-width:680px;margin:0 auto}
-.header{text-align:center;margin-bottom:2rem}
-.logo{font-size:28px;font-weight:600;color:#1A3A5C;letter-spacing:-.5px}
-.logo span{color:#0F6E56}
-.tagline{font-size:14px;color:#666;margin-top:.25rem}
-.nhs-badge{display:inline-block;background:#005EB8;color:#fff;font-size:11px;font-weight:600;padding:4px 12px;border-radius:20px;margin-top:.5rem;letter-spacing:.04em}
-.step-nav{display:flex;gap:6px;justify-content:center;margin-bottom:1.5rem;flex-wrap:wrap}
-.step-dot{width:10px;height:10px;border-radius:50%;background:#CBD5E1;cursor:pointer;border:none;padding:0;transition:background .2s}
-.step-dot.active{background:#2E75B6}
-.stage{display:none;animation:fadeIn .25s ease}
-.stage.active{display:block}
-@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
-.card{background:#fff;border:1px solid #E2E8F0;border-radius:12px;padding:1.25rem;margin-bottom:1rem}
-.card.highlight{border:1.5px solid #2E75B6}
-.card.nhs{border:1.5px solid #005EB8}
-.card.teal{border:1.5px solid #0F6E56}
-.label{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#94A3B8;margin-bottom:.4rem}
-.label.nhs{color:#005EB8}
-.label.teal{color:#0F6E56}
-.title{font-size:16px;font-weight:600;color:#1A3A5C;margin-bottom:.5rem}
-.body{font-size:14px;color:#475569;line-height:1.7}
-.schema-block{background:#F8FAFC;border:1px solid #E2E8F0;border-radius:8px;padding:1rem;margin-top:.75rem;font-family:'Courier New',monospace;font-size:12px;color:#1A1A1A;line-height:1.8}
-.schema-key{color:#2E75B6}
-.schema-val{color:#0F6E56}
-.schema-val.amber{color:#B45309}
-.badge{display:inline-block;font-size:11px;padding:4px 12px;border-radius:20px;font-weight:600;margin-bottom:.75rem}
-.badge.blue{background:#EFF6FF;color:#1D4ED8}
-.badge.amber{background:#FFFBEB;color:#92400E}
-.badge.green{background:#F0FDF4;color:#166534}
-.badge.nhs{background:#E8F2FF;color:#005EB8}
-.row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
-.gap-box{border:1.5px dashed #CBD5E1;border-radius:8px;padding:1rem;text-align:center;margin:.5rem 0;background:#F8FAFC}
-.gap-label{font-size:13px;color:#64748B;font-style:italic}
-.full-record{background:#F8FAFC;border-radius:8px;padding:1rem;margin-top:.75rem;border:1px solid #E2E8F0}
-.rec-row{display:flex;justify-content:space-between;font-size:12px;padding:5px 0;border-bottom:1px solid #F1F5F9}
-.rec-row:last-child{border-bottom:none}
-.rec-key{color:#94A3B8;font-family:'Courier New',monospace}
-.rec-val{color:#1A3A5C;font-weight:600;text-align:right;max-width:55%;font-family:'Courier New',monospace}
-.rec-val.green{color:#0F6E56}
-.rec-val.amber{color:#B45309}
-.quote-block{background:#E8F2FF;border-left:3px solid #005EB8;border-radius:0 8px 8px 0;padding:1rem;margin:.75rem 0;font-size:13px;color:#1A3A5C;line-height:1.7;font-style:italic}
-.quote-attr{font-size:11px;color:#005EB8;font-style:normal;font-weight:600;margin-top:.4rem}
-.reg-row{display:flex;gap:.75rem;align-items:flex-start;padding:.6rem 0;border-bottom:1px solid #F1F5F9}
-.reg-row:last-child{border-bottom:none}
-.reg-icon{font-size:16px;flex-shrink:0;margin-top:1px}
-.reg-text{font-size:13px;color:#475569;line-height:1.5}
-.reg-text strong{color:#1A3A5C}
-.nav-row{display:flex;justify-content:space-between;align-items:center;margin-top:1rem}
-.nav-btn{font-size:13px;padding:8px 20px;border:1px solid #CBD5E1;border-radius:8px;background:#fff;color:#1A3A5C;cursor:pointer;font-weight:500}
-.nav-btn:hover{background:#F8FAFC}
-.nav-btn:disabled{opacity:.35;cursor:default}
-.step-label{font-size:12px;color:#94A3B8}
-.footer{text-align:center;margin-top:2rem;font-size:12px;color:#94A3B8}
-.footer strong{color:#1A3A5C}
-.stack-row{display:flex;align-items:center;gap:.5rem;padding:.5rem 0;border-bottom:1px solid #F1F5F9;font-size:13px}
-.stack-row:last-child{border-bottom:none}
-.stack-layer{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0}
-.stack-name{color:#1A3A5C;font-weight:500;flex:1}
-.stack-who{color:#94A3B8;font-size:12px}
-.stack-who.caval{color:#0F6E56;font-weight:600}
-@media(max-width:480px){.row{grid-template-columns:1fr}}
+  @import url('https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=DM+Sans:wght@300;400;500;600&display=swap');
+  .caval-wrap *{box-sizing:border-box;margin:0;padding:0}
+  .caval-wrap{font-family:'DM Sans',sans-serif;background:#F7F8FA;color:#1A2A3A;padding:2rem 1rem}
+  .caval-container{max-width:720px;margin:0 auto}
+  .caval-header{text-align:center;margin-bottom:2rem}
+  .caval-logo{font-family:'DM Mono',monospace;font-size:28px;font-weight:500;color:#1A2A3A;letter-spacing:-.5px}
+  .caval-logo sup{font-size:14px;vertical-align:super}
+  .caval-tagline{font-size:14px;color:#64748B;margin-top:4px;font-weight:300}
+  .caval-nhs-badge{display:inline-block;background:#005EB8;color:#fff;font-size:11px;font-weight:500;padding:4px 12px;border-radius:20px;margin-top:.5rem;letter-spacing:.04em;font-family:'DM Mono',monospace}
+  .caval-stage{display:none}
+  .caval-stage.active{display:block;animation:cavalFade .25s ease}
+  @keyframes cavalFade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+  .caval-step-label{font-size:11px;font-family:'DM Mono',monospace;font-weight:500;letter-spacing:.08em;text-transform:uppercase;margin-bottom:1rem;padding:4px 10px;border-radius:4px;display:inline-block}
+  .caval-step-label.blue{color:#1D4ED8;background:#EFF6FF}
+  .caval-step-label.amber{color:#B45309;background:#FFFBEB}
+  .caval-step-label.green{color:#166534;background:#F0FDF4}
+  .caval-step-label.nhs{color:#005EB8;background:#E8F2FF}
+  .caval-card{background:#fff;border:1px solid #E2E8F0;border-radius:12px;padding:1.25rem 1.5rem;margin-bottom:1rem}
+  .caval-card.nhs{border-color:#005EB8}
+  .caval-card.teal{border-color:#0F6E56}
+  .caval-card.highlight{border-color:#2E75B6}
+  .caval-card.warning{border-color:#FCA5A5;background:#FFFAFA}
+  .caval-card.success{border-color:#6EE7B7;background:#F0FDF9}
+  .caval-card-label{font-size:10px;font-family:'DM Mono',monospace;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:#94A3B8;margin-bottom:.5rem}
+  .caval-card-label.nhs{color:#005EB8}
+  .caval-card-label.teal{color:#0F6E56}
+  .caval-card-title{font-size:17px;font-weight:600;color:#1A2A3A;margin-bottom:.6rem;line-height:1.35}
+  .caval-card-body{font-size:14px;color:#475569;line-height:1.7}
+  .caval-quote{background:#E8F2FF;border-left:3px solid #005EB8;border-radius:0 8px 8px 0;padding:1rem;margin:.75rem 0;font-size:13px;color:#1A2A3A;line-height:1.7;font-style:italic}
+  .caval-quote-attr{font-size:11px;color:#005EB8;font-style:normal;font-weight:500;margin-top:.4rem;font-family:'DM Mono',monospace}
+  .caval-schema{background:#F8FAFC;border:1px solid #E2E8F0;border-radius:8px;padding:1rem 1.25rem;margin-top:.9rem;font-family:'DM Mono',monospace;font-size:12px;line-height:2;color:#334155}
+  .caval-k{color:#2E75B6}.caval-v{color:#0F6E56}.caval-v.amber{color:#B45309}
+  .caval-italic-note{font-size:13px;color:#64748B;font-style:italic;text-align:center;margin:.75rem 0;padding:.75rem;border:1px dashed #CBD5E1;border-radius:8px}
+  .caval-full-record{background:#F8FAFC;border:1px solid #E2E8F0;border-radius:8px;padding:1rem 1.25rem;margin-top:.75rem}
+  .caval-rec-row{display:flex;justify-content:space-between;align-items:baseline;font-size:12px;padding:5px 0;border-bottom:1px solid #F1F5F9}
+  .caval-rec-row:last-child{border-bottom:none}
+  .caval-rec-key{color:#94A3B8;font-family:'DM Mono',monospace}
+  .caval-rec-val{color:#1A2A3A;font-family:'DM Mono',monospace;font-size:11px;font-weight:500;text-align:right;max-width:60%}
+  .caval-rec-val.green{color:#0F6E56}.caval-rec-val.amber{color:#B45309}
+  .caval-what-box{background:#fff;border:1px solid #E2E8F0;border-radius:10px;padding:1rem 1.25rem;margin-top:1rem}
+  .caval-what-label{font-size:10px;font-family:'DM Mono',monospace;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:#94A3B8;margin-bottom:.5rem}
+  .caval-what-body{font-size:14px;color:#475569;line-height:1.7}
+  .caval-stack-row{display:flex;align-items:center;gap:.75rem;padding:.6rem 0;border-bottom:1px solid #F1F5F9;font-size:13px}
+  .caval-stack-row:last-child{border-bottom:none}
+  .caval-stack-layer{width:32px;height:32px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;font-family:'DM Mono',monospace}
+  .caval-stack-name{color:#1A2A3A;font-weight:500;flex:1}
+  .caval-stack-who{color:#94A3B8;font-size:12px;font-family:'DM Mono',monospace}
+  .caval-stack-who.caval{color:#0F6E56;font-weight:500}
+  .caval-reg-row{display:flex;gap:.75rem;align-items:flex-start;padding:.6rem 0;border-bottom:1px solid #F1F5F9;font-size:13px;color:#475569}
+  .caval-reg-row:last-child{border-bottom:none}
+  .caval-reg-icon{flex-shrink:0;font-size:14px;margin-top:1px}
+  .caval-reg-text strong{color:#1A2A3A}
+  .caval-gap-box{border:1.5px dashed #CBD5E1;border-radius:8px;padding:1rem;text-align:center;margin:.75rem 0;background:#F8FAFC}
+  .caval-gap-label{font-size:13px;color:#64748B;font-style:italic}
+  .caval-nav{display:flex;justify-content:space-between;align-items:center;margin-top:1.5rem}
+  .caval-nav-btn{font-size:13px;padding:9px 22px;border:1px solid #CBD5E1;border-radius:8px;background:#fff;color:#1A2A3A;cursor:pointer;font-weight:500;transition:all .15s}
+  .caval-nav-btn:hover:not(:disabled){background:#F8FAFC;border-color:#94A3B8}
+  .caval-nav-btn:disabled{opacity:.3;cursor:default}
+  .caval-nav-counter{font-size:12px;color:#94A3B8;font-family:'DM Mono',monospace}
+  .caval-footer{text-align:center;margin-top:2.5rem;font-size:11px;color:#CBD5E1;line-height:1.8;font-family:'DM Mono',monospace}
+  .caval-footer a{color:#94A3B8;text-decoration:none}
+  @media(max-width:500px){.caval-two-col{grid-template-columns:1fr}}
 </style>
-</head>
-<body>
-<div class="container">
- 
-<div class="header">
-<div class="logo">CAVAL<span>&#8482;</span></div>
-<div class="tagline">Clinical AI Validation, Attribution &amp; Lineage</div>
-<div class="nhs-badge">NHS Innovation Service &mdash; Technical Positioning</div>
-</div>
- 
-<div class="step-nav" id="dots"></div>
-<div id="stages">
- 
-<!-- STEP 1: THE PROBLEM -->
-<div class="stage active">
-<div class="badge blue">Step 1 of 7 &mdash; the problem NHS already named</div>
-<div class="card nhs">
-<div class="label nhs">NHS England guidance &mdash; March 2026</div>
-<div class="title">Two requirements with no infrastructure underneath them</div>
-<div class="quote-block">
-"Clinicians are accountable for the accuracy of clinical records, and outputs generated by ambient scribes must be reviewed and validated before inclusion in patient records."
-<div class="quote-attr">&#8212; NHS England, Guidance on AI-enabled ambient scribing products, March 2026</div>
-</div>
-<div class="quote-block">
-"Audio recordings and transcripts should typically be deleted once a verified summary has been produced, unless there is a clear justification for retaining them."
-<div class="quote-attr">&#8212; NHS England / ICO, Ambient scribing information governance guidance, March 2026</div>
-</div>
-</div>
-<div class="card">
-<div class="label">The gap these two requirements create together</div>
-<div class="body">NHS England requires clinicians to review and validate AI output before it enters the record. NHS England also recommends deleting transcripts once summaries are produced. If the transcript is deleted and the only record is the signed note, there is no evidence that the required review actually happened. <strong style="color:#1A3A5C">CAVAL is the evidence layer that confirms the review happened &mdash; without requiring transcript retention.</strong></div>
-</div>
-</div>
- 
-<!-- STEP 2: THE ENCOUNTER -->
-<div class="stage">
-<div class="badge blue">Step 2 of 7 &mdash; the clinical encounter</div>
-<div class="card">
-<div class="label">NHS clinical setting</div>
-<div class="title">GP consultation with ambient scribe active</div>
-<div class="body">A GP sees a patient for a follow-up appointment. An ambient scribe listed on the NHS England AI Supplier List is running in the background, capturing the consultation. The scribe will generate a draft clinical note for the GP to review before signing into the EPR.</div>
-</div>
-<div class="card">
-<div class="label">What NHS England requires at this moment</div>
-<div class="body">The patient must be informed the ambient scribe is in use and given the opportunity to object. The GP must be aware of their obligations. The organisation must have completed a DPIA. All of this is policy. None of it creates a record of what happens at the clinical decision point.</div>
-</div>
-</div>
- 
-<!-- STEP 3: AI OUTPUT -->
-<div class="stage">
-<div class="badge amber">Step 3 of 7 &mdash; the AI surfaces output</div>
-<div class="card highlight">
-<div class="label">AI output &mdash; ambient scribe draft note</div>
-<div class="title">Draft clinical note generated</div>
-<div class="body">The ambient scribe produces a draft SOAP note from the consultation. The note is clinically plausible, well-structured, and reads like careful documentation. It contains findings that may or may not accurately reflect what was discussed. The GP must review and validate it before signing.</div>
-<div class="schema-block">
-<span class="schema-key">"ai_output"</span>: {<br>
-&nbsp;&nbsp;<span class="schema-key">"tool_id"</span>: <span class="schema-val">"ambient-scribe-v3.2"</span>,<br>
-&nbsp;&nbsp;<span class="schema-key">"tool_registry"</span>: <span class="schema-val">"NHS England AI Supplier List"</span>,<br>
-&nbsp;&nbsp;<span class="schema-key">"output_type"</span>: <span class="schema-val">"draft_clinical_note"</span>,<br>
-&nbsp;&nbsp;<span class="schema-key">"surfaced_at"</span>: <span class="schema-val">"2026-05-14T10:14:22Z"</span>,<br>
-&nbsp;&nbsp;<span class="schema-key">"content_hash"</span>: <span class="schema-val">"sha256:f7c2..."</span><br>
+ 
+<div class="caval-wrap">
+<div class="caval-container">
+ 
+  <div class="caval-header">
+    <div class="caval-logo">CAVAL<sup>&#8482;</sup></div>
+    <div class="caval-tagline">Clinical AI Validation, Attribution &amp; Lineage — NHS Walkthrough</div>
+    <div><span class="caval-nhs-badge">NHS Innovation Service &mdash; Technical Positioning</span></div>
+  </div>
+ 
+  <div id="caval-stages">
+ 
+    <!-- STEP 1 -->
+    <div class="caval-stage active">
+      <div class="caval-step-label blue">Step 1 of 7 &mdash; the problem NHS already named</div>
+      <div class="caval-card nhs">
+        <div class="caval-card-label nhs">NHS England guidance &mdash; March 2026</div>
+        <div class="caval-card-title">Two requirements with no infrastructure underneath them</div>
+        <div class="caval-quote">
+          &ldquo;Clinicians are accountable for the accuracy of clinical records, and outputs generated by ambient scribes must be reviewed and validated before inclusion in patient records.&rdquo;
+          <div class="caval-quote-attr">&#8212; NHS England, Guidance on AI-enabled ambient scribing products, March 2026</div>
+        </div>
+        <div class="caval-quote">
+          &ldquo;Audio recordings and transcripts should typically be deleted once a verified summary has been produced, unless there is a clear justification for retaining them.&rdquo;
+          <div class="caval-quote-attr">&#8212; NHS England / ICO, Ambient scribing information governance guidance, March 2026</div>
+        </div>
+      </div>
+      <div class="caval-card">
+        <div class="caval-card-label">The gap these two requirements create together</div>
+        <div class="caval-card-body">NHS England requires clinicians to review and validate AI output before it enters the record. NHS England also recommends deleting transcripts once summaries are produced. If the transcript is deleted and the only record is the signed note, there is no evidence that the required review actually happened. <strong style="color:#1A2A3A">CAVAL is the evidence layer that confirms the review happened &mdash; without requiring transcript retention.</strong></div>
+      </div>
+    </div>
+ 
+    <!-- STEP 2 -->
+    <div class="caval-stage">
+      <div class="caval-step-label blue">Step 2 of 7 &mdash; the clinical encounter</div>
+      <div class="caval-card">
+        <div class="caval-card-label">NHS clinical setting</div>
+        <div class="caval-card-title">GP consultation with ambient scribe active</div>
+        <div class="caval-card-body">A GP sees a patient for a follow-up appointment. An ambient scribe listed on the NHS England AI Supplier List is running in the background, capturing the consultation. The scribe will generate a draft clinical note for the GP to review before signing into the EPR.</div>
+      </div>
+      <div class="caval-card">
+        <div class="caval-card-label">What NHS England requires at this moment</div>
+        <div class="caval-card-body">The patient must be informed the ambient scribe is in use and given the opportunity to object. The GP must be aware of their obligations. The organisation must have completed a DPIA. All of this is policy. None of it creates a record of what happens at the clinical decision point.</div>
+      </div>
+    </div>
+ 
+    <!-- STEP 3 -->
+    <div class="caval-stage">
+      <div class="caval-step-label amber">Step 3 of 7 &mdash; the AI surfaces output</div>
+      <div class="caval-card highlight">
+        <div class="caval-card-label">AI output &mdash; ambient scribe draft note</div>
+        <div class="caval-card-title">Draft clinical note generated</div>
+        <div class="caval-card-body">The ambient scribe produces a draft SOAP note from the consultation. The note is clinically plausible, well-structured, and reads like careful documentation. It contains findings that may or may not accurately reflect what was discussed. The GP must review and validate it before signing into the EPR.</div>
+        <div class="caval-schema">
+<span class="caval-k">"ai_output"</span>: {<br>
+&nbsp;&nbsp;<span class="caval-k">"tool_id"</span>: <span class="caval-v">"ambient-scribe-v3.2"</span>,<br>
+&nbsp;&nbsp;<span class="caval-k">"tool_registry"</span>: <span class="caval-v">"NHS England AI Supplier List"</span>,<br>
+&nbsp;&nbsp;<span class="caval-k">"output_type"</span>: <span class="caval-v">"draft_clinical_note"</span>,<br>
+&nbsp;&nbsp;<span class="caval-k">"surfaced_at"</span>: <span class="caval-v">"2026-05-14T10:14:22Z"</span>,<br>
+&nbsp;&nbsp;<span class="caval-k">"content_hash"</span>: <span class="caval-v">"sha256:f7c2..."</span><br>
 }
-</div>
-</div>
-<div class="card">
-<div class="label">What CAVAL captures</div>
-<div class="body">The AI output is recorded at the moment it is surfaced &mdash; which tool produced it, whether it is listed on the NHS England AI Supplier List, the exact timestamp, and a tamper-evident hash of the draft content. This record is immutable from this point forward. The transcript has not yet been deleted.</div>
-<div class="body" style="margin-top:.5rem;font-style:italic;color:#0F6E56;">CAVAL captures no patient-identifiable information &mdash; only metadata necessary for governance.</div>
-</div>
-</div>
- 
-<!-- STEP 4: CLINICIAN REVIEW -->
-<div class="stage">
-<div class="badge amber">Step 4 of 7 &mdash; the clinician reviews</div>
-<div class="card highlight">
-<div class="label">The moment NHS England requires to be documented &mdash; but has no infrastructure for</div>
-<div class="title">GP reviews, modifies, and validates the draft note</div>
-<div class="body">The GP reads the draft note. She corrects two findings that the scribe captured inaccurately. She adds clinical reasoning that the AI could not have known. She validates the note as an accurate record of the consultation. NHS England says this review must happen. Current EPR workflows do not consistently create a reconstructable record that it did.</div>
-<div class="schema-block">
-<span class="schema-key">"clinician_decision"</span>: {<br>
-&nbsp;&nbsp;<span class="schema-key">"admissibility"</span>: <span class="schema-val amber">"modify"</span>,<br>
-&nbsp;&nbsp;<span class="schema-key">"clinician_id_hash"</span>: <span class="schema-val">"sha256:3a7f..."</span>,<br>
-&nbsp;&nbsp;<span class="schema-key">"decision_timestamp"</span>: <span class="schema-val">"2026-05-14T10:16:48Z"</span>,<br>
-&nbsp;&nbsp;<span class="schema-key">"review_duration_sec"</span>: <span class="schema-val">146</span>,<br>
-&nbsp;&nbsp;<span class="schema-key">"fields_modified"</span>: <span class="schema-val">2</span>,<br>
-&nbsp;&nbsp;<span class="schema-key">"rationale_code"</span>: <span class="schema-val">"clinical_correction"</span><br>
+        </div>
+      </div>
+      <div class="caval-what-box">
+        <div class="caval-what-label">What CAVAL captures at this moment</div>
+        <div class="caval-what-body">The AI output is recorded at the moment it is surfaced &mdash; which tool produced it, whether it is listed on the NHS England AI Supplier List, the exact timestamp, and a tamper-evident hash of the draft content. This record is immutable from this point forward. The transcript has not yet been deleted.</div>
+        <div class="caval-what-body" style="margin-top:.5rem;font-style:italic;color:#0F6E56">CAVAL captures no patient-identifiable information &mdash; only metadata necessary for governance.</div>
+      </div>
+    </div>
+ 
+    <!-- STEP 4 -->
+    <div class="caval-stage">
+      <div class="caval-step-label amber">Step 4 of 7 &mdash; the clinician reviews</div>
+      <div class="caval-card highlight">
+        <div class="caval-card-label">The moment NHS England requires to be documented &mdash; but has no infrastructure for</div>
+        <div class="caval-card-title">GP reviews, modifies, and validates the draft note</div>
+        <div class="caval-card-body">The GP reads the draft note. She corrects two findings that the scribe captured inaccurately. She adds clinical reasoning that the AI could not have known. She validates the note as an accurate record of the consultation. NHS England says this review must happen. Current EPR workflows do not consistently create a reconstructable record that it did.</div>
+        <div class="caval-schema">
+<span class="caval-k">"clinician_decision"</span>: {<br>
+&nbsp;&nbsp;<span class="caval-k">"admissibility"</span>: <span class="caval-v amber">"modify"</span>,<br>
+&nbsp;&nbsp;<span class="caval-k">"clinician_id_hash"</span>: <span class="caval-v">"sha256:3a7f..."</span>,<br>
+&nbsp;&nbsp;<span class="caval-k">"decision_timestamp"</span>: <span class="caval-v">"2026-05-14T10:16:48Z"</span>,<br>
+&nbsp;&nbsp;<span class="caval-k">"review_duration_sec"</span>: <span class="caval-v">146</span>,<br>
+&nbsp;&nbsp;<span class="caval-k">"fields_modified"</span>: <span class="caval-v">2</span>,<br>
+&nbsp;&nbsp;<span class="caval-k">"rationale_code"</span>: <span class="caval-v">"clinical_correction"</span><br>
 }
+        </div>
+      </div>
+    </div>
+ 
+    <!-- STEP 5 -->
+    <div class="caval-stage">
+      <div class="caval-step-label amber">Step 5 of 7 &mdash; the transcript is deleted</div>
+      <div class="caval-card">
+        <div class="caval-card-label">NHS England / ICO recommendation</div>
+        <div class="caval-card-title">Transcript deleted &mdash; summary retained</div>
+        <div class="caval-card-body">The organisation follows NHS England and ICO guidance and deletes the audio recording and transcript once the verified summary has been produced. This is the correct data minimisation approach. It reduces storage cost, data protection liability, and ICO exposure. The signed note enters the EPR.</div>
+      </div>
+      <div class="caval-gap-box">
+        <div class="caval-gap-label">Without CAVAL: the transcript is gone and the review is unverifiable</div>
+        <div style="font-size:12px;color:#94A3B8;margin-top:.4rem">NHS England required the review to happen. There is now no evidence it did.</div>
+      </div>
+      <div class="caval-card success">
+        <div class="caval-card-label teal">With CAVAL: the attribution record survives transcript deletion</div>
+        <div class="caval-card-body">CAVAL's tamper-evident attribution record captured the review event before the transcript was deleted. The record of what the AI produced, that the GP reviewed it for 146 seconds, that she modified two fields, and that she validated it as accurate &mdash; all of that exists independently of the transcript. The data minimisation goal and the accountability requirement are both satisfied simultaneously.</div>
+      </div>
+      <div class="caval-card">
+        <div class="caval-card-label">Patient data and Caldicott alignment</div>
+        <div class="caval-card-body">CAVAL stores no patient-identifiable information &mdash; only the metadata necessary for governance accountability. This aligns with Caldicott principles by minimising use of patient-identifiable data while preserving the evidence of clinical decision-making.</div>
+      </div>
+    </div>
+ 
+    <!-- STEP 6 -->
+    <div class="caval-stage">
+      <div class="caval-step-label green">Step 6 of 7 &mdash; the complete attribution record</div>
+      <div class="caval-card highlight">
+        <div class="caval-card-label">CAVAL attribution record &mdash; complete</div>
+        <div class="caval-card-title">What exists when NHS Resolution, CQC, or ICO asks</div>
+        <div class="caval-full-record">
+          <div class="caval-rec-row"><span class="caval-rec-key">encounter_id</span><span class="caval-rec-val">enc_20260514_NHS_0031</span></div>
+          <div class="caval-rec-row"><span class="caval-rec-key">ai_tool</span><span class="caval-rec-val">ambient-scribe-v3.2</span></div>
+          <div class="caval-rec-row"><span class="caval-rec-key">registry_status</span><span class="caval-rec-val green">NHS_AVT_verified</span></div>
+          <div class="caval-rec-row"><span class="caval-rec-key">output_type</span><span class="caval-rec-val">draft_clinical_note</span></div>
+          <div class="caval-rec-row"><span class="caval-rec-key">ai_surfaced_at</span><span class="caval-rec-val">10:14:22 UTC</span></div>
+          <div class="caval-rec-row"><span class="caval-rec-key">admissibility</span><span class="caval-rec-val amber">modify</span></div>
+          <div class="caval-rec-row"><span class="caval-rec-key">review_duration</span><span class="caval-rec-val green">146 seconds</span></div>
+          <div class="caval-rec-row"><span class="caval-rec-key">fields_modified</span><span class="caval-rec-val amber">2</span></div>
+          <div class="caval-rec-row"><span class="caval-rec-key">decision_at</span><span class="caval-rec-val">10:16:48 UTC</span></div>
+          <div class="caval-rec-row"><span class="caval-rec-key">transcript_status</span><span class="caval-rec-val green">deleted_per_ICO_guidance</span></div>
+          <div class="caval-rec-row"><span class="caval-rec-key">record_type</span><span class="caval-rec-val green">tamper-evident</span></div>
+          <div class="caval-rec-row"><span class="caval-rec-key">append_only</span><span class="caval-rec-val green">true</span></div>
+          <div class="caval-rec-row"><span class="caval-rec-key">vendor</span><span class="caval-rec-val green">agnostic</span></div>
+        </div>
+      </div>
+      <div class="caval-what-box">
+        <div class="caval-what-label">What this answers</div>
+        <div class="caval-what-body">When NHS Resolution asks whether a clinician reviewed AI output before acting on it. When CQC asks whether AI was reviewed before signing. When ICO asks whether data minimisation was applied. When a claimant&rsquo;s solicitor asks whether the clinician actually read the AI-generated note. The answer exists. Without CAVAL &mdash; and without the transcript &mdash; it doesn&rsquo;t.</div>
+      </div>
+    </div>
+ 
+    <!-- STEP 7 -->
+    <div class="caval-stage">
+      <div class="caval-step-label nhs">Step 7 of 7 &mdash; where CAVAL sits in the UK regulatory stack</div>
+      <div class="caval-card nhs">
+        <div class="caval-card-label nhs">The MHRA AI Airlock finding &mdash; 2025</div>
+        <div class="caval-card-title">The gap was named. Nobody built the infrastructure.</div>
+        <div class="caval-quote">
+          &ldquo;Certain alerts &mdash; for example, relating to human-AI agreement &mdash; could be managed locally by clinical governance or management teams.&rdquo;
+          <div class="caval-quote-attr">&#8212; MHRA AI Airlock Simulation Workshop Report, Post-Market Surveillance, 2025</div>
+        </div>
+        <div class="caval-card-body" style="margin-top:.75rem">Newton&rsquo;s Tree monitors drift and AI performance at population level. <strong style="color:#1A2A3A">CAVAL focuses on that local clinical governance layer &mdash; the per-encounter human decision record that population-level monitoring cannot capture.</strong></div>
+        <div class="caval-card-body" style="margin-top:.75rem">CAVAL complements the NHS AI Lab&rsquo;s focus on safe AI deployment by providing the encounter-level attribution record missing from current governance tooling. Attribution events can be surfaced via FHIR R4-compatible resources, enabling integration without workflow disruption. CAVAL&rsquo;s governance layer can also support ICS-level assurance where AI tools are deployed across multiple Trusts.</div>
+      </div>
+ 
+      <div class="caval-card">
+        <div class="caval-card-label">How CAVAL fits the UK governance stack</div>
+        <div class="caval-stack-row">
+          <div class="caval-stack-layer" style="background:#EFF6FF;color:#1D4ED8">1-3</div>
+          <div class="caval-stack-name">AI development, validation &amp; population-level monitoring</div>
+          <div class="caval-stack-who">Newton&rsquo;s Tree (FAMOS)</div>
+        </div>
+        <div class="caval-stack-row">
+          <div class="caval-stack-layer" style="background:#E0FDF4;color:#0F6E56;border:1.5px solid #0F6E56">4</div>
+          <div class="caval-stack-name">Per-encounter attribution &mdash; human-AI agreement at decision point</div>
+          <div class="caval-stack-who caval">CAVAL&#8482; &larr; this layer</div>
+        </div>
+        <div class="caval-stack-row">
+          <div class="caval-stack-layer" style="background:#EFF6FF;color:#1D4ED8">5</div>
+          <div class="caval-stack-name">Clinical documentation &mdash; EPR audit trails, signed notes</div>
+          <div class="caval-stack-who">EMIS / SystmOne / other EPR systems</div>
+        </div>
+        <div class="caval-stack-row">
+          <div class="caval-stack-layer" style="background:#EFF6FF;color:#1D4ED8">6-7</div>
+          <div class="caval-stack-name">Regulatory &amp; accreditation</div>
+          <div class="caval-stack-who">CQC, NHS Resolution, MHRA, DTAC, ICO</div>
+        </div>
+      </div>
+ 
+      <div class="caval-card teal">
+        <div class="caval-card-label teal">CAVAL&rsquo;s current NHS engagement</div>
+        <div class="caval-reg-row"><span class="caval-reg-icon">&#10003;</span><div class="caval-reg-text"><strong>NHS Innovation Service</strong> &mdash; Needs assessment complete. Health Innovation Yorkshire &amp; Humber assigned. Technical positioning discussions underway.</div></div>
+        <div class="caval-reg-row"><span class="caval-reg-icon">&#10003;</span><div class="caval-reg-text"><strong>MHRA</strong> &mdash; Current positioning: outside SaMD scope based on current description. Does not inform, drive, or perform clinical management.</div></div>
+        <div class="caval-reg-row"><span class="caval-reg-icon">&#10003;</span><div class="caval-reg-text"><strong>DTAC</strong> &mdash; Confirmed outside device scope pre-prototype. Engage post-pilot.</div></div>
+        <div class="caval-reg-row"><span class="caval-reg-icon">&#9679;</span><div class="caval-reg-text"><strong>UK ICO Innovation Advice</strong> &mdash; Case 00000133 active. Response due May 28, 2026.</div></div>
+        <div class="caval-reg-row"><span class="caval-reg-icon">&#9679;</span><div class="caval-reg-text"><strong>DCB0129</strong> &mdash; Clinical risk management standard. To be initiated during MVP build. CAVAL&rsquo;s append-only architecture is DCB0129-aligned by design.</div></div>
+        <div class="caval-reg-row"><span class="caval-reg-icon">&#9679;</span><div class="caval-reg-text"><strong>Open standard</strong> &mdash; CC BY 4.0, published at github.com/cavallayer. Vendor-agnostic across NHS AI deployments.</div></div>
+        <div class="caval-reg-row"><span class="caval-reg-icon">&#9679;</span><div class="caval-reg-text"><strong>Pilot co-development</strong> &mdash; Pilot design and deployment will be co-developed with the participating Trust to respect local governance structures.</div></div>
+      </div>
+    </div>
+ 
+  </div>
+ 
+  <div class="caval-nav">
+    <button class="caval-nav-btn" id="caval-prev" onclick="cavalMove(-1)" disabled>&larr; Previous</button>
+    <span class="caval-nav-counter" id="caval-counter">1 of 7</span>
+    <button class="caval-nav-btn" id="caval-next" onclick="cavalMove(1)">Next &rarr;</button>
+  </div>
+ 
+  <div class="caval-footer">
+    <strong>CAVAL&#8482;</strong> &mdash; Clinical AI Validation, Attribution &amp; Lineage<br>
+    Kairoc Systems Inc. &middot; <a href="https://cavallayer.ai">cavallayer.ai</a> &middot; <a href="https://github.com/cavallayer">github.com/cavallayer</a><br>
+    Open standard &middot; CC BY 4.0
+  </div>
+ 
 </div>
 </div>
-</div>
- 
-<!-- STEP 5: TRANSCRIPT DELETION -->
-<div class="stage">
-<div class="badge amber">Step 5 of 7 &mdash; the transcript is deleted</div>
-<div class="card">
-<div class="label">NHS England / ICO recommendation</div>
-<div class="title">Transcript deleted &mdash; summary retained</div>
-<div class="body">The organisation follows NHS England and ICO guidance and deletes the audio recording and transcript once the verified summary has been produced. This is the correct data minimisation approach. It reduces storage cost, data protection liability, and ICO exposure. The signed note enters the EPR.</div>
-</div>
-<div class="gap-box">
-<div class="gap-label">Without CAVAL: the transcript is gone and the review is unverifiable</div>
-<div style="font-size:12px;color:#94A3B8;margin-top:.4rem">NHS England required the review to happen. There is now no evidence it did.</div>
-</div>
-<div class="card teal">
-<div class="label teal">With CAVAL: the attribution record survives transcript deletion</div>
-<div class="body">CAVAL's tamper-evident attribution record captured the review event before the transcript was deleted. The record of what the AI produced, that the GP reviewed it for 146 seconds, that she modified two fields, and that she validated it as accurate &mdash; all of that exists independently of the transcript. The data minimisation goal and the accountability requirement are both satisfied simultaneously.</div>
-</div>
-<div class="card">
-<div class="label">Patient data and Caldicott alignment</div>
-<div class="body">CAVAL stores no patient-identifiable information &mdash; only the metadata necessary for governance accountability. This aligns with Caldicott principles by minimising use of patient-identifiable data while preserving the evidence of clinical decision-making.</div>
-</div>
-</div>
- 
-<!-- STEP 6: THE COMPLETE RECORD -->
-<div class="stage">
-<div class="badge green">Step 6 of 7 &mdash; the complete attribution record</div>
-<div class="card highlight">
-<div class="label">CAVAL attribution record &mdash; complete</div>
-<div class="title">What exists when NHS Resolution, CQC, or ICO asks</div>
-<div class="full-record">
-<div class="rec-row"><span class="rec-key">encounter_id</span><span class="rec-val">enc_20260514_NHS_0031</span></div>
-<div class="rec-row"><span class="rec-key">ai_tool</span><span class="rec-val">ambient-scribe-v3.2</span></div>
-<div class="rec-row"><span class="rec-key">registry_status</span><span class="rec-val green">NHS_AVT_verified</span></div>
-<div class="rec-row"><span class="rec-key">output_type</span><span class="rec-val">draft_clinical_note</span></div>
-<div class="rec-row"><span class="rec-key">ai_surfaced_at</span><span class="rec-val">10:14:22 UTC</span></div>
-<div class="rec-row"><span class="rec-key">admissibility</span><span class="rec-val amber">modify</span></div>
-<div class="rec-row"><span class="rec-key">review_duration</span><span class="rec-val green">146 seconds</span></div>
-<div class="rec-row"><span class="rec-key">fields_modified</span><span class="rec-val amber">2</span></div>
-<div class="rec-row"><span class="rec-key">decision_at</span><span class="rec-val">10:16:48 UTC</span></div>
-<div class="rec-row"><span class="rec-key">transcript_status</span><span class="rec-val green">deleted_per_ICO_guidance</span></div>
-<div class="rec-row"><span class="rec-key">record_type</span><span class="rec-val green">tamper-evident</span></div>
-<div class="rec-row"><span class="rec-key">append_only</span><span class="rec-val green">true</span></div>
-<div class="rec-row"><span class="rec-key">vendor</span><span class="rec-val green">agnostic</span></div>
-</div>
-</div>
-<div class="card">
-<div class="label">What this answers</div>
-<div class="body">When NHS Resolution asks whether a clinician reviewed AI output before acting on it. When CQC asks whether AI was reviewed before signing. When ICO asks whether data minimisation was applied. When a claimant's solicitor asks whether the clinician actually read the AI-generated note. The answer exists. Without CAVAL &mdash; and without the transcript &mdash; it doesn't.</div>
-</div>
-</div>
- 
-<!-- STEP 7: THE REGULATORY STACK -->
-<div class="stage">
-<div class="badge nhs">Step 7 of 7 &mdash; where CAVAL sits in the UK regulatory stack</div>
-<div class="card nhs">
-<div class="label nhs">The MHRA AI Airlock finding &mdash; October 2025</div>
-<div class="title">The regulatory gap was already identified</div>
-<div class="quote-block">
-"Certain alerts &mdash; for example, relating to human-AI agreement &mdash; could be managed locally by clinical governance or management teams."
-<div class="quote-attr">&#8212; MHRA AI Airlock Simulation Workshop Report, Post-Market Surveillance, 2025</div>
-</div>
-<div class="body" style="margin-top:.75rem">The MHRA Airlock programme found that human-AI agreement is a governance gap that sits outside post-market surveillance and must be managed locally. Newton's Tree monitors drift and AI performance at population level. <strong style="color:#1A3A5C">CAVAL focuses on that local clinical governance layer &mdash; the per-encounter human decision record that population-level monitoring cannot capture.</strong></div>
-<div class="body" style="margin-top:.75rem">CAVAL complements the NHS AI Lab's focus on safe AI deployment by providing the encounter-level attribution record missing from current governance tooling. Attribution events can be surfaced via FHIR R4-compatible resources, enabling integration without workflow disruption. CAVAL's governance layer can also support ICS-level assurance where AI tools are deployed across multiple Trusts.</div>
-</div>
- 
-<div class="card">
-<div class="label">How CAVAL fits the UK governance stack</div>
-<div class="stack-row">
-<div class="stack-layer" style="background:#EFF6FF;color:#1D4ED8">1-3</div>
-<div class="stack-name">AI development, validation &amp; deployment monitoring</div>
-<div class="stack-who">Newton's Tree (FAMOS)</div>
-</div>
-<div class="stack-row">
-<div class="stack-layer" style="background:#E0FDF4;color:#0F6E56;border:1.5px solid #0F6E56">4</div>
-<div class="stack-name">Attribution of clinical decisions &mdash; human-AI agreement</div>
-<div class="stack-who caval">CAVAL&#8482; &larr; this layer</div>
-</div>
-<div class="stack-row">
-<div class="stack-layer" style="background:#EFF6FF;color:#1D4ED8">5</div>
-<div class="stack-name">Clinical documentation &mdash; EPR audit trails, signed notes</div>
-<div class="stack-who">EMIS / SystmOne / other EPR systems</div>
-</div>
-<div class="stack-row">
-<div class="stack-layer" style="background:#EFF6FF;color:#1D4ED8">6-7</div>
-<div class="stack-name">NHS Resolution, MHRA, DTAC, ICO, CQC</div>
-<div class="stack-who">Regulatory &amp; accreditation</div>
-</div>
-</div>
- 
-<div class="card teal">
-<div class="label teal">CAVAL's current NHS engagement</div>
-<div class="body">
-<div class="reg-row"><span class="reg-icon">&#10003;</span><div class="reg-text"><strong>NHS Innovation Service</strong> &mdash; Needs assessment complete. Health Innovation Yorkshire &amp; Humber assigned as innovation partner. Technical positioning discussions underway.</div></div>
-<div class="reg-row"><span class="reg-icon">&#10003;</span><div class="reg-text"><strong>UK ICO Innovation Advice</strong> &mdash; Case 00000133 active. Response due May 28, 2026.</div></div>
-<div class="reg-row"><span class="reg-icon">&#10003;</span><div class="reg-text"><strong>DTAC</strong> &mdash; Confirmed outside device scope pre-prototype. Will be engaged post-pilot.</div></div>
-<div class="reg-row"><span class="reg-icon">&#10003;</span><div class="reg-text"><strong>MHRA</strong> &mdash; Current positioning: outside SaMD scope based on current description. CAVAL does not inform, drive, or perform clinical management.</div></div>
-<div class="reg-row"><span class="reg-icon">&#9679;</span><div class="reg-text"><strong>Open standard</strong> &mdash; CC BY 4.0, published at github.com/cavallayer. Vendor-agnostic across NHS AI deployments.</div></div>
-<div class="reg-row"><span class="reg-icon">&#9679;</span><div class="reg-text"><strong>Pilot co-development</strong> &mdash; Pilot design and deployment will be co-developed with the participating Trust to respect local governance structures.</div></div>
-</div>
-</div>
-</div>
- 
-</div>
- 
-<div class="nav-row">
-<button class="nav-btn" id="prev-btn" onclick="navigate(-1)" disabled>&larr; Previous</button>
-<span class="step-label" id="step-label">1 of 7</span>
-<button class="nav-btn" id="next-btn" onclick="navigate(1)">Next &rarr;</button>
-</div>
- 
-<div class="footer">
-<strong>CAVAL&#8482;</strong> &mdash; Clinical AI Validation, Attribution &amp; Lineage<br>
-Kairoc Systems Inc. &middot; cavallayer.ai &middot; github.com/cavallayer<br>
-Open standard &middot; CC BY 4.0
-</div>
-</div>
- 
+ 
 <script>
-const stages=document.querySelectorAll('.stage');
-const dotsEl=document.getElementById('dots');
-const prevBtn=document.getElementById('prev-btn');
-const nextBtn=document.getElementById('next-btn');
-const stepLabel=document.getElementById('step-label');
-let current=0;
-stages.forEach((_,i)=>{
-const d=document.createElement('button');
-d.className='step-dot'+(i===0?' active':'');
-d.setAttribute('aria-label','Go to step '+(i+1));
-d.onclick=()=>goTo(i);
-dotsEl.appendChild(d);
-});
-function goTo(n){
-stages[current].classList.remove('active');
-dotsEl.children[current].classList.remove('active');
-current=n;
-stages[current].classList.add('active');
-dotsEl.children[current].classList.add('active');
-prevBtn.disabled=current===0;
-nextBtn.disabled=current===stages.length-1;
-stepLabel.textContent=(current+1)+' of '+stages.length;
-}
-function navigate(dir){goTo(current+dir);}
-document.addEventListener('keydown',e=>{
-if(e.key==='ArrowRight'&&current<stages.length-1)navigate(1);
-if(e.key==='ArrowLeft'&&current>0)navigate(-1);
-});
+(function(){
+  var stages=document.querySelectorAll('.caval-stage');
+  var cur=0;
+  function go(n){
+    stages[cur].classList.remove('active');
+    cur=n;
+    stages[cur].classList.add('active');
+    document.getElementById('caval-prev').disabled=cur===0;
+    document.getElementById('caval-next').disabled=cur===stages.length-1;
+    document.getElementById('caval-counter').textContent=(cur+1)+' of '+stages.length;
+  }
+  window.cavalMove=function(d){go(Math.min(Math.max(cur+d,0),stages.length-1));};
+  document.addEventListener('keydown',function(e){
+    if(e.key==='ArrowRight'&&cur<stages.length-1)cavalMove(1);
+    if(e.key==='ArrowLeft'&&cur>0)cavalMove(-1);
+  });
+})();
 </script>
-</body>
-</html>
