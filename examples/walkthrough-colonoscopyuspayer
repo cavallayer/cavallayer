@@ -1,0 +1,258 @@
+Caval walkthrough · HTML
+Copy
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CAVAL™ — Clinical AI Attribution Walkthrough</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=DM+Sans:wght@300;400;500;600&display=swap');
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'DM Sans',sans-serif;background:#F7F8FA;color:#1A2A3A;min-height:100vh;padding:2rem 1rem}
+  .container{max-width:720px;margin:0 auto}
+  .header{text-align:center;margin-bottom:2rem}
+  .logo{font-family:'DM Mono',monospace;font-size:28px;font-weight:500;color:#1A2A3A;letter-spacing:-.5px}
+  .logo sup{font-size:14px;vertical-align:super}
+  .tagline{font-size:14px;color:#64748B;margin-top:4px;font-weight:300}
+  .dots{display:flex;justify-content:center;gap:8px;margin-bottom:2rem}
+  .dot{width:8px;height:8px;border-radius:50%;background:#CBD5E1;cursor:pointer;transition:all .2s}
+  .dot.active{background:#0F6E56;transform:scale(1.2)}
+  .dot.visited{background:#94A3B8}
+  .stage{display:none}
+  .stage.active{display:block;animation:fadeIn .25s ease}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+  .step-label{font-size:11px;font-family:'DM Mono',monospace;font-weight:500;letter-spacing:.08em;text-transform:uppercase;margin-bottom:1rem;padding:4px 10px;border-radius:4px;display:inline-block}
+  .step-label.blue{color:#1D4ED8;background:#EFF6FF}
+  .step-label.red{color:#DC2626;background:#FEF2F2}
+  .step-label.amber{color:#B45309;background:#FFFBEB}
+  .step-label.teal{color:#0F6E56;background:#ECFDF5}
+  .step-label.navy{color:#1A2A3A;background:#F1F5F9}
+  .card{background:#fff;border:1px solid #E2E8F0;border-radius:12px;padding:1.25rem 1.5rem;margin-bottom:1rem}
+  .card.warning{border-color:#FCA5A5;background:#FFFAFA}
+  .card.success{border-color:#6EE7B7;background:#F0FDF9}
+  .card-label{font-size:10px;font-family:'DM Mono',monospace;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:#94A3B8;margin-bottom:.5rem}
+  .card-title{font-size:17px;font-weight:600;color:#1A2A3A;margin-bottom:.6rem;line-height:1.35}
+  .card-body{font-size:14px;color:#475569;line-height:1.7}
+  .schema{background:#F8FAFC;border:1px solid #E2E8F0;border-radius:8px;padding:1rem 1.25rem;margin-top:.9rem;font-family:'DM Mono',monospace;font-size:12px;line-height:2;color:#334155}
+  .k{color:#2E75B6}
+  .v{color:#0F6E56}
+  .v.amber{color:#B45309}
+  .v.red{color:#DC2626}
+  .v.gray{color:#94A3B8}
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1rem}
+  .col-card{background:#fff;border:1px solid #E2E8F0;border-radius:10px;padding:1rem}
+  .col-card.dim{opacity:.7}
+  .col-title{font-size:10px;font-family:'DM Mono',monospace;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:#94A3B8;margin-bottom:.75rem}
+  .col-row{display:flex;justify-content:space-between;align-items:baseline;font-size:13px;padding:5px 0;border-bottom:1px solid #F1F5F9}
+  .col-row:last-child{border-bottom:none}
+  .col-key{color:#64748B}
+  .col-val{font-family:'DM Mono',monospace;font-size:11px;font-weight:500}
+  .col-val.red{color:#DC2626}
+  .col-val.green{color:#0F6E56}
+  .col-val.amber{color:#B45309}
+  .prop-list{margin-top:.75rem}
+  .prop-row{display:flex;align-items:flex-start;gap:.6rem;padding:.4rem 0;font-size:13px;color:#475569;border-bottom:1px solid #F8FAFC}
+  .prop-row:last-child{border-bottom:none}
+  .prop-icon{font-size:13px;flex-shrink:0;margin-top:1px}
+  .italic-note{font-size:13px;color:#64748B;font-style:italic;text-align:center;margin-top:.75rem;padding:.75rem;border:1px dashed #CBD5E1;border-radius:8px}
+  .full-record{background:#F8FAFC;border:1px solid #E2E8F0;border-radius:8px;padding:1rem 1.25rem;margin-top:.75rem}
+  .rec-row{display:flex;justify-content:space-between;align-items:baseline;font-size:12px;padding:5px 0;border-bottom:1px solid #F1F5F9}
+  .rec-row:last-child{border-bottom:none}
+  .rec-key{color:#94A3B8;font-family:'DM Mono',monospace}
+  .rec-val{color:#1A2A3A;font-family:'DM Mono',monospace;font-size:11px;font-weight:500;text-align:right;max-width:60%}
+  .rec-val.green{color:#0F6E56}
+  .rec-val.amber{color:#B45309}
+  .rec-val.red{color:#DC2626}
+  .what-box{background:#fff;border:1px solid #E2E8F0;border-radius:10px;padding:1rem 1.25rem;margin-top:1rem}
+  .what-label{font-size:10px;font-family:'DM Mono',monospace;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:#94A3B8;margin-bottom:.5rem}
+  .what-body{font-size:14px;color:#475569;line-height:1.7}
+  .nav{display:flex;justify-content:space-between;align-items:center;margin-top:1.5rem}
+  .nav-btn{font-size:13px;padding:9px 22px;border:1px solid #CBD5E1;border-radius:8px;background:#fff;color:#1A2A3A;cursor:pointer;font-weight:500;transition:all .15s}
+  .nav-btn:hover:not(:disabled){background:#F8FAFC;border-color:#94A3B8}
+  .nav-btn:disabled{opacity:.3;cursor:default}
+  .nav-counter{font-size:12px;color:#94A3B8;font-family:'DM Mono',monospace}
+  .footer{text-align:center;margin-top:2.5rem;font-size:11px;color:#CBD5E1;line-height:1.8;font-family:'DM Mono',monospace}
+  .footer a{color:#94A3B8;text-decoration:none}
+  @media(max-width:500px){.two-col{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <div class="logo">CAVAL<sup>&#8482;</sup></div>
+    <div class="tagline">Clinical AI Validation, Attribution &amp; Lineage — Interactive Walkthrough</div>
+  </div>
+  <div class="dots" id="dots"></div>
+  <div id="stages">
+ 
+    <div class="stage active">
+      <div class="step-label blue">Step 1 of 6 — the clinical encounter</div>
+      <div class="card">
+        <div class="card-label">Procedure</div>
+        <div class="card-title">Colonoscopy with multiple techniques</div>
+        <div class="card-body">A patient undergoes a colonoscopy. During the procedure, the gastroenterologist performs three techniques: cold snare excision, cold forceps excision, and tattooing of the polypectomy site. One procedure. Multiple techniques. The operative report documents all three correctly.</div>
+      </div>
+      <div class="card">
+        <div class="card-label">What the operative report says</div>
+        <div class="card-body">One colonoscopy. Three techniques applied during a single procedure. The documentation is accurate and complete. A coding AI will now generate CPT codes from this documentation.</div>
+      </div>
+    </div>
+ 
+    <div class="stage">
+      <div class="step-label red">Step 2 of 6 — the AI generates erroneous output</div>
+      <div class="card warning">
+        <div class="card-label">AI Output — Coding System</div>
+        <div class="card-title">Three separate colonoscopy codes generated</div>
+        <div class="card-body">The coding AI reads the operative report and misinterprets technique variation as distinct procedures. It generates three separate colonoscopy CPT codes for the same visit. The codes are plausible. The documentation appears complete. The output is wrong.</div>
+        <div class="schema">
+<span class="k">"ai_output"</span>: {<br>
+&nbsp;&nbsp;<span class="k">"tool_id"</span>: <span class="v">"coding-ai-v4.1"</span>,<br>
+&nbsp;&nbsp;<span class="k">"output_type"</span>: <span class="v">"cpt_code_generation"</span>,<br>
+&nbsp;&nbsp;<span class="k">"codes_generated"</span>: <span class="v red">["45380","45381","45385"]</span>,<br>
+&nbsp;&nbsp;<span class="k">"surfaced_at"</span>: <span class="v">"2026-05-14T09:14:22Z"</span>,<br>
+&nbsp;&nbsp;<span class="k">"content_hash"</span>: <span class="v gray">"sha256:c8a1..."</span><br>
+}
+        </div>
+      </div>
+      <div class="what-box">
+        <div class="what-label">What CAVAL captures at this moment</div>
+        <div class="what-body">The AI output is recorded — what coding tool generated it, what codes were produced, the exact timestamp, and a tamper-evident hash. The record is immutable. Three codes were generated. That fact is now permanently captured regardless of what happens next.</div>
+      </div>
+    </div>
+ 
+    <div class="stage">
+      <div class="step-label amber">Step 3 of 6 — the human reviews and corrects</div>
+      <div class="card success">
+        <div class="card-label">Human Review — the moment CAVAL was built for</div>
+        <div class="card-title">Coder reviews operative report and overrides AI output</div>
+        <div class="card-body">A certified coder reviews the operative report. She recognises immediately that multiple excision techniques during a single colonoscopy do not constitute separate procedures. The coding logic misinterpreted technique modifiers as distinct encounters. She corrects the codes.</div>
+        <div class="schema">
+<span class="k">"human_review"</span>: {<br>
+&nbsp;&nbsp;<span class="k">"reviewer_id_hash"</span>: <span class="v">"sha256:7b3e..."</span>,<br>
+&nbsp;&nbsp;<span class="k">"review_started_at"</span>: <span class="v">"2026-05-14T09:23:10Z"</span>,<br>
+&nbsp;&nbsp;<span class="k">"ai_output_reviewed"</span>: <span class="v gray">"sha256:c8a1..."</span>,<br>
+&nbsp;&nbsp;<span class="k">"admissibility"</span>: <span class="v amber">"override"</span>,<br>
+&nbsp;&nbsp;<span class="k">"codes_corrected_to"</span>: <span class="v green">["45385"]</span>,<br>
+&nbsp;&nbsp;<span class="k">"rationale"</span>: <span class="v">"single_procedure_multi_technique"</span>,<br>
+&nbsp;&nbsp;<span class="k">"review_duration_sec"</span>: <span class="v">497</span>,<br>
+&nbsp;&nbsp;<span class="k">"decision_timestamp"</span>: <span class="v">"2026-05-14T09:31:07Z"</span><br>
+}
+        </div>
+      </div>
+    </div>
+ 
+    <div class="stage">
+      <div class="step-label red">Step 4 of 6 — what happens without CAVAL</div>
+      <div class="card warning">
+        <div class="card-label">Without the attribution record</div>
+        <div class="card-title">The correction happened. The reasoning disappeared.</div>
+        <div class="card-body">The claim goes out with the corrected code. But there is no record of what the AI generated, why it was wrong, that a human reviewed it, what the reasoning was, or that the correction was made. The EHR shows one colonoscopy. The billing system was corrected. Everything looks fine.</div>
+        <div class="prop-list">
+          <div class="card-label" style="margin-top:.75rem">What propagates downstream — invisibly</div>
+          <div class="prop-row"><span class="prop-icon">&#9888;&#65039;</span><span>Claims data: the original three-code error may have already transmitted</span></div>
+          <div class="prop-row"><span class="prop-icon">&#9888;&#65039;</span><span>Quality metrics: procedure counts are potentially inflated</span></div>
+          <div class="prop-row"><span class="prop-icon">&#9888;&#65039;</span><span>AI training data: the erroneous output is not flagged as incorrect</span></div>
+          <div class="prop-row"><span class="prop-icon">&#9888;&#65039;</span><span>Utilization review: three colonoscopies show in the record</span></div>
+          <div class="prop-row"><span class="prop-icon">&#9888;&#65039;</span><span>Fraud detection: pattern looks like upcoding</span></div>
+          <div class="prop-row"><span class="prop-icon">&#9888;&#65039;</span><span>The coding AI makes the same error on the next similar case</span></div>
+        </div>
+      </div>
+      <div class="italic-note">The system believes three colonoscopies occurred. Nobody can prove otherwise.</div>
+    </div>
+ 
+    <div class="stage">
+      <div class="step-label teal">Step 5 of 6 — what CAVAL changes</div>
+      <div class="card success">
+        <div class="card-label">With the attribution record</div>
+        <div class="card-title">The correction is documented. The reasoning survives.</div>
+        <div class="card-body">CAVAL captured what the AI generated, that a human reviewed it, how long the review took, what the correction was, and why. That record is tamper-evident, append-only, and exists independently of the EHR, the billing system, and the coding AI that produced the error.</div>
+      </div>
+      <div class="two-col">
+        <div class="col-card dim">
+          <div class="col-title">Without CAVAL</div>
+          <div class="col-row"><span class="col-key">AI generated 3 codes</span><span class="col-val red">unknown</span></div>
+          <div class="col-row"><span class="col-key">Human reviewed it</span><span class="col-val red">unknown</span></div>
+          <div class="col-row"><span class="col-key">Reasoning</span><span class="col-val red">unknown</span></div>
+          <div class="col-row"><span class="col-key">Correction made</span><span class="col-val red">unknown</span></div>
+          <div class="col-row"><span class="col-key">System can learn</span><span class="col-val red">no</span></div>
+        </div>
+        <div class="col-card">
+          <div class="col-title">With CAVAL</div>
+          <div class="col-row"><span class="col-key">AI generated 3 codes</span><span class="col-val green">&#10003; recorded</span></div>
+          <div class="col-row"><span class="col-key">Human reviewed it</span><span class="col-val amber">&#10003; 497 seconds</span></div>
+          <div class="col-row"><span class="col-key">Reasoning</span><span class="col-val green">&#10003; captured</span></div>
+          <div class="col-row"><span class="col-key">Correction made</span><span class="col-val green">&#10003; tamper-evident</span></div>
+          <div class="col-row"><span class="col-key">System can learn</span><span class="col-val green">yes</span></div>
+        </div>
+      </div>
+    </div>
+ 
+    <div class="stage">
+      <div class="step-label navy">Step 6 of 6 — the complete attribution record</div>
+      <div class="card">
+        <div class="card-label">CAVAL Attribution Record — Complete</div>
+        <div class="card-title">What exists when a payer, auditor, or attorney asks</div>
+        <div class="full-record">
+          <div class="rec-row"><span class="rec-key">encounter_id</span><span class="rec-val">enc_20260514_0092</span></div>
+          <div class="rec-row"><span class="rec-key">ai_tool</span><span class="rec-val">coding-ai-v4.1</span></div>
+          <div class="rec-row"><span class="rec-key">output_type</span><span class="rec-val">cpt_code_generation</span></div>
+          <div class="rec-row"><span class="rec-key">codes_generated</span><span class="rec-val red">45380, 45381, 45385</span></div>
+          <div class="rec-row"><span class="rec-key">ai_surfaced_at</span><span class="rec-val">09:14:22 UTC</span></div>
+          <div class="rec-row"><span class="rec-key">admissibility</span><span class="rec-val amber">override</span></div>
+          <div class="rec-row"><span class="rec-key">codes_corrected_to</span><span class="rec-val green">45385 only</span></div>
+          <div class="rec-row"><span class="rec-key">rationale</span><span class="rec-val green">single_procedure_multi_technique</span></div>
+          <div class="rec-row"><span class="rec-key">review_duration</span><span class="rec-val">497 seconds</span></div>
+          <div class="rec-row"><span class="rec-key">decision_at</span><span class="rec-val">09:31:07 UTC</span></div>
+          <div class="rec-row"><span class="rec-key">record_type</span><span class="rec-val green">tamper-evident</span></div>
+          <div class="rec-row"><span class="rec-key">append_only</span><span class="rec-val green">true</span></div>
+          <div class="rec-row"><span class="rec-key">vendor</span><span class="rec-val green">agnostic</span></div>
+        </div>
+      </div>
+      <div class="what-box">
+        <div class="what-label">What this answers</div>
+        <div class="what-body">When a payer audits the claim three years from now. When a patient disputes being billed for three colonoscopies. When a compliance officer asks how the coding error occurred and whether it was caught. When the coding AI vendor asks why their model keeps generating this error. The answer exists. The system can learn. Without CAVAL — none of this is possible.</div>
+      </div>
+    </div>
+ 
+  </div>
+ 
+  <div class="nav">
+    <button class="nav-btn" id="prev" onclick="move(-1)" disabled>&#8592; Previous</button>
+    <span class="nav-counter" id="counter">1 of 6</span>
+    <button class="nav-btn" id="next" onclick="move(1)">Next &#8594;</button>
+  </div>
+ 
+  <div class="footer">
+    <strong>CAVAL&#8482;</strong> — Clinical AI Validation, Attribution &amp; Lineage<br>
+    Kairoc Systems Inc. &middot; <a href="https://cavallayer.ai">cavallayer.ai</a> &middot; <a href="https://github.com/cavallayer">github.com/cavallayer</a><br>
+    Open standard &middot; CC BY 4.0 &middot; Pre-MVP &middot; May 2026
+  </div>
+</div>
+<script>
+  const stages = document.querySelectorAll('.stage');
+  const dotsEl = document.getElementById('dots');
+  let cur = 0;
+  stages.forEach((_,i)=>{
+    const d = document.createElement('div');
+    d.className = 'dot'+(i===0?' active':'');
+    d.onclick = ()=>go(i);
+    dotsEl.appendChild(d);
+  });
+  function go(n){
+    stages[cur].classList.remove('active');
+    dotsEl.children[cur].classList.remove('active');
+    dotsEl.children[cur].classList.add('visited');
+    cur=n;
+    stages[cur].classList.add('active');
+    dotsEl.children[cur].classList.remove('visited');
+    dotsEl.children[cur].classList.add('active');
+    document.getElementById('prev').disabled=cur===0;
+    document.getElementById('next').disabled=cur===stages.length-1;
+    document.getElementById('counter').textContent=(cur+1)+' of '+stages.length;
+  }
+  function move(d){go(Math.min(Math.max(cur+d,0),stages.length-1));}
+</script>
+</body>
+</html>
