@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/cavallayer/cavallayer/schema/caas-v2.0.0.json",
+  "title": "Clinical AI Attribution Schema (CAAS) v2.0.0 — Agent Only",
+  "description": "Vendor-agnostic attribution schema for AI-as-clinical-operator workflows where no human clinician is present at the individual decision moment. For human-in-loop workflows see caas-v0.1.3.json. Copyright 2026 Sarah Curtright. CAVAL™ and CAVAL Layer™ are trademarks of Sarah Curtright. Licensed under CC BY 4.0: https://creativecommons.org/licenses/by/4.0/legalcode",
+  "caval_version": "2.0.0",
+  "schema_type": "agent_only",
+  "event_type": "agent_attribution_event",
+  "event_id": "uuid-v4",
+  "timestamp_utc": "ISO-8601",
+  "agent": {
+    "agent_id": "string",
+    "agent_version": "string",
+    "agent_type": "autonomous|orchestrated|hybrid",
+    "vendor": "string",
+    "authorization_framework": "string",
+    "regulatory_status": "medical_device|non_device|uncertain|jurisdiction_dependent|unknown",
+    "authorization_state": {
+      "authorized_action_scope": [
+        "string"
+      ],
+      "authorization_issued_by": "string",
+      "valid_from": "ISO-8601",
+      "valid_until": "ISO-8601|null",
+      "authorization_revoked_at": "ISO-8601|null",
+      "scope_drift_flag": "boolean"
+    }
+  },
+  "decision_state": {
+    "decision_id": "string",
+    "decision_timestamp": "ISO-8601",
+    "decision_summary_hash": "sha256"
+  },
+  "agent_provenance_chain": [
+    {
+      "agent_id": "string",
+      "role": "planner|retriever|specialist|validator|executor|orchestrator|other",
+      "contribution_summary": "string",
+      "contribution_hash": "sha256|null",
+      "sequence_position": "integer",
+      "parent_agent_id": "string|null",
+      "input_artifact_ids": [
+        "string"
+      ],
+      "output_artifact_ids": [
+        "string"
+      ],
+      "activation_timestamp": "ISO-8601",
+      "completion_timestamp": "ISO-8601|null"
+    }
+  ],
+  "action_record": {
+    "execution_mode": "recommendation_only|queued_for_human|agent_executed|system_executed",
+    "action_type": "string",
+    "action_timestamp": "ISO-8601",
+    "action_summary_hash": "sha256"
+  },
+  "human_oversight": {
+    "post_execution_review": {
+      "review_performed": "boolean",
+      "review_timestamp": "ISO-8601|null",
+      "reviewer_role": "string|null",
+      "review_outcome": "approved|modified|reversed|escalated|not_reviewed|unknown",
+      "oversight_quality_signals": {
+        "review_duration_ms": "integer|null",
+        "edit_depth": "none|minor|moderate|substantial|unknown",
+        "override_pattern_flag": "boolean|null",
+        "signal_source": {
+          "review_duration_ms": "ehr_ui|governance_layer|manual_entry|unknown",
+          "edit_depth": "ehr_ui|document_editor|manual_entry|unknown",
+          "override_pattern_flag": "governance_layer|analytics_layer|manual_entry|unknown"
+        }
+      }
+    }
+  },
+  "accountability": {
+    "liability_framework": "vendor_clinical_liability|provider_liability|shared_liability|contract_specific|unknown"
+  },
+  "governance_metadata": {
+    "pms_reportable": "boolean",
+    "pms_framework_references": [
+      "string"
+    ],
+    "evidence_strength": {
+      "level": "low|moderate|high|cryptographically_verified",
+      "basis": "string",
+      "cryptographic_proof_available": "boolean",
+      "third_party_verifiable": "boolean"
+    }
+  }
+}
