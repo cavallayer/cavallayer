@@ -1,0 +1,243 @@
+{
+  "caval_version": "0.1.3-with-reviewer-suggestions",
+  "schema_type": "human_in_loop",
+  "event_type": "caval_attribution_event",
+  "event_id": "uuid-v4",
+  "timestamp_utc": "ISO-8601",
+  "event": {
+    "schema_status": "unchanged_from_v0.1.2"
+  },
+  "decision_context": {
+    "schema_status": "unchanged_from_v0.1.2"
+  },
+  "tool_activity_log": [
+    {
+      "tool_id": "string",
+      "name": "string",
+      "version": "string",
+      "vendor": "string",
+      "category": "string",
+      "activation_timestamp": "ISO-8601",
+      "trigger": "string",
+      "output_surfaced": "boolean",
+      "output_attended": "boolean",
+      "output_type": "string",
+      "output_summary_hash": "sha256",
+      "confidence_score": "number|null",
+      "model_metadata": {
+        "model_id": "string",
+        "model_version": "string",
+        "training_data_cutoff": "ISO-8601|null"
+      },
+      "operating_within_validated_scope": "boolean",
+      "scope_drift_flag": "boolean",
+      "decision_basis": {
+        "category": "enum",
+        "basis_assigned_by": "agent_self_report|external_clinical_system|governance_layer|unknown",
+        "prompt_timing": "pre_ai_exposure|post_ai_exposure|unknown"
+      },
+      "information_exposure": {
+        "surfaced_artifacts": [
+          {
+            "artifact_id": "string",
+            "artifact_type": "string",
+            "artifact_summary_hash": "sha256",
+            "surfaced_timestamp": "ISO-8601"
+          }
+        ],
+        "viewed_artifacts": [
+          {
+            "artifact_id": "string",
+            "viewed_timestamp": "ISO-8601",
+            "view_duration_ms": "integer|null"
+          }
+        ],
+        "dismissed_artifacts": [
+          {
+            "artifact_id": "string",
+            "dismissed_timestamp": "ISO-8601",
+            "dismissal_method": "explicit|implicit|timeout|unknown"
+          }
+        ],
+        "exposure_duration_ms": "integer|null"
+      }
+    }
+  ],
+  "pre_decision_capture": {
+    "reserved_pending_legal_review": true,
+    "independent_pre_ai_assessment_recorded": "boolean|null",
+    "assessment_timestamp": "ISO-8601|null",
+    "assessment_method": "structured_entry|free_text|voice|external_record|unknown|null",
+    "assessment_hash": "sha256|null"
+  },
+  "judgment_capture": [
+    {
+      "tool_id": "string",
+      "capture_method": "string",
+      "inference_pattern": "string",
+      "capture_timestamp": "ISO-8601",
+      "judgment": "string",
+      "modification_flag": "boolean",
+      "override_reason_code": "string|null",
+      "override_reason_free_text": "string|null",
+      "time_to_judgment_seconds": "number|null",
+      "deferred_fields": {},
+      "prior_judgment_summary": "string|null",
+      "oversight_quality_signals": {
+        "review_duration_ms": "integer|null",
+        "edit_depth": "none|minor|moderate|substantial|unknown",
+        "override_pattern_flag": "boolean|null",
+        "signal_source": {
+          "review_duration_ms": "cds_hooks|ehr_ui|middleware|manual_entry|unknown",
+          "edit_depth": "ehr_ui|document_editor|middleware|manual_entry|unknown",
+          "override_pattern_flag": "governance_layer|analytics_layer|middleware|manual_entry|unknown"
+        }
+      },
+      "verification": {
+        "verification_performed": "boolean",
+        "verifier_independence": "independent_human|different_lineage_system|same_vendor|same_model_family|unknown",
+        "verifier_saw_same_ai_output": "boolean|null",
+        "discrepancy_detected": "boolean|null",
+        "discrepancy_type": "string|null",
+        "discrepancy_resolution": "string|null",
+        "signal_source": "ehr_ui|governance_layer|manual_entry|external_verification_system|unknown"
+      },
+      "judgment_confidence": {
+        "pre_ai_confidence": "number|null",
+        "post_ai_confidence": "number|null",
+        "confidence_scale": "0_to_1|0_to_100|ordinal|unknown"
+      },
+      "disposition_diverged_from_pre_ai": {
+        "reserved_pending_legal_review": true,
+        "value": "boolean|null"
+      }
+    }
+  ],
+  "governance_metadata": {
+    "jurisdictions": [
+      "string"
+    ],
+    "hipaa_covered_entity": "boolean",
+    "baa_on_file": "boolean|null",
+    "retention_policy_years": "integer",
+    "data_residency": "string",
+    "regulatory_mappings": [
+      "string"
+    ],
+    "immutability_verified": "boolean",
+    "encryption": {
+      "at_rest": "boolean",
+      "in_transit": "boolean",
+      "key_management": "string"
+    },
+    "pms_reportable": "boolean",
+    "pms_framework_references": [
+      "string"
+    ],
+    "evidence_strength": {
+      "level": "low|moderate|high|cryptographically_verified",
+      "basis": "string",
+      "cryptographic_proof_available": "boolean",
+      "third_party_verifiable": "boolean"
+    }
+  },
+  "provenance_chain": {
+    "schema_status": "unchanged_from_v0.1.2"
+  },
+  "review_record": {
+    "schema_status": "unchanged_from_v0.1.2"
+  },
+  "promotion_conditions": {
+    "schema_status": "unchanged_from_v0.1.2"
+  },
+  "encounter_attribution_chain": {
+    "schema_status": "unchanged_from_v0.1.2"
+  },
+  "_extensions": {
+    "schema_status": "unchanged_from_v0.1.2"
+  },
+  "caval_2_0_agent_only": {
+    "schema_type": "agent_only",
+    "event_type": "agent_attribution_event",
+    "agent": {
+      "agent_id": "string",
+      "agent_version": "string",
+      "agent_type": "autonomous|orchestrated|hybrid",
+      "vendor": "string",
+      "authorization_framework": "string",
+      "regulatory_status": "medical_device|non_device|uncertain|jurisdiction_dependent|unknown",
+      "authorization_state": {
+        "authorized_action_scope": [
+          "string"
+        ],
+        "authorization_issued_by": "string",
+        "valid_from": "ISO-8601",
+        "valid_until": "ISO-8601|null",
+        "authorization_revoked_at": "ISO-8601|null",
+        "scope_drift_flag": "boolean"
+      }
+    },
+    "decision_state": {
+      "decision_id": "string",
+      "decision_timestamp": "ISO-8601",
+      "decision_summary_hash": "sha256"
+    },
+    "agent_provenance_chain": [
+      {
+        "agent_id": "string",
+        "role": "planner|retriever|specialist|validator|executor|orchestrator|other",
+        "contribution_summary": "string",
+        "contribution_hash": "sha256|null",
+        "sequence_position": "integer",
+        "parent_agent_id": "string|null",
+        "input_artifact_ids": [
+          "string"
+        ],
+        "output_artifact_ids": [
+          "string"
+        ],
+        "activation_timestamp": "ISO-8601",
+        "completion_timestamp": "ISO-8601|null"
+      }
+    ],
+    "action_record": {
+      "execution_mode": "recommendation_only|queued_for_human|agent_executed|system_executed",
+      "action_type": "string",
+      "action_timestamp": "ISO-8601",
+      "action_summary_hash": "sha256"
+    },
+    "human_oversight": {
+      "post_execution_review": {
+        "review_performed": "boolean",
+        "review_timestamp": "ISO-8601|null",
+        "reviewer_role": "string|null",
+        "review_outcome": "approved|modified|reversed|escalated|not_reviewed|unknown",
+        "oversight_quality_signals": {
+          "review_duration_ms": "integer|null",
+          "edit_depth": "none|minor|moderate|substantial|unknown",
+          "override_pattern_flag": "boolean|null",
+          "signal_source": {
+            "review_duration_ms": "ehr_ui|governance_layer|manual_entry|unknown",
+            "edit_depth": "ehr_ui|document_editor|manual_entry|unknown",
+            "override_pattern_flag": "governance_layer|analytics_layer|manual_entry|unknown"
+          }
+        }
+      }
+    },
+    "accountability": {
+      "liability_framework": "vendor_clinical_liability|provider_liability|shared_liability|contract_specific|unknown"
+    },
+    "governance_metadata": {
+      "pms_reportable": "boolean",
+      "pms_framework_references": [
+        "string"
+      ],
+      "evidence_strength": {
+        "level": "low|moderate|high|cryptographically_verified",
+        "basis": "string",
+        "cryptographic_proof_available": "boolean",
+        "third_party_verifiable": "boolean"
+      }
+    }
+  }
+}
